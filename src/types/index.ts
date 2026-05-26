@@ -291,6 +291,68 @@ export interface Exporter {
   sites: string[];
 }
 
+// ---------- On-call ----------
+
+export type DayOfWeek = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+
+export type AlertChannel = "sms" | "voice" | "push" | "email" | "slack" | "teams";
+
+export interface Schedule {
+  id: string;
+  name: string;
+  team: string;
+  tenant: string;
+  timezone: string;
+  description: string;
+  /** ISO weekday letter, e.g. "Mon" */
+  rotationLength: string;
+}
+
+export interface Shift {
+  scheduleId: string;
+  layer: number;
+  userId: string;
+  /** Day-of-week index 0–6, Mon=0 */
+  startDay: number;
+  endDay: number;
+  /** 24h "HH:mm" */
+  startTime: string;
+  endTime: string;
+}
+
+export interface EscalationStep {
+  step: number;
+  /** Minutes after the previous step (or alert fire for step 1) */
+  afterMinutes: number;
+  /** Either an on-call schedule, a specific user, or a team. */
+  target:
+    | { kind: "schedule"; scheduleId: string }
+    | { kind: "user"; userId: string }
+    | { kind: "team"; team: string };
+  channels: AlertChannel[];
+}
+
+export interface EscalationPolicy {
+  id: string;
+  name: string;
+  scheduleId: string;
+  description: string;
+  steps: EscalationStep[];
+  /** Repeat the policy this many times if no one acks */
+  repeat: number;
+}
+
+export interface OnCallOverride {
+  id: string;
+  scheduleId: string;
+  originalUserId: string;
+  coveringUserId: string;
+  /** ISO date strings */
+  start: string;
+  end: string;
+  reason: string;
+}
+
 // ---------- Tweaks (theme/UX state) ----------
 
 export type Density = "compact" | "comfortable" | "spacious";

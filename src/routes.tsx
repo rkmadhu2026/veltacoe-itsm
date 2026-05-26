@@ -3,6 +3,7 @@ import { AuthGate } from "@/shell/AuthGate";
 import { Layout } from "@/shell/Layout";
 import { LandingScreen, SigninScreen, SignupScreen } from "@/screens/auth";
 import { DashboardScreen } from "@/screens/dashboard/Dashboard";
+import { OnCallScreen } from "@/screens/on-call/OnCall";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -36,6 +37,8 @@ export function AppRoutes() {
         <Route path="/incidents" element={<Placeholder title="Incidents" />} />
         <Route path="/incidents/new" element={<Placeholder title="New incident" />} />
         <Route path="/incidents/:id" element={<Placeholder />} />
+
+        <Route path="/on-call" element={<OnCallScreen />} />
 
         <Route path="/problems" element={<Placeholder title="Problem management" />} />
         <Route path="/problems/new" element={<Placeholder title="New problem" />} />

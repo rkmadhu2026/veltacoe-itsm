@@ -31,6 +31,7 @@ export const NAV: readonly NavSection[] = [
     items: [
       { id: "dashboard",        label: "Dashboard",        icon: "fa-chart-pie",              to: "/dashboard", kbd: "G D" },
       { id: "incidents",        label: "Incidents",        icon: "fa-triangle-exclamation",   to: "/incidents", kbd: "G I", matchPrefix: "/incidents", badge: { n: 4, kind: "critical" } },
+      { id: "on-call",          label: "On-call",          icon: "fa-clock-rotate-left",       to: "/on-call",   matchPrefix: "/on-call" },
       { id: "problems",         label: "Problems",         icon: "fa-magnifying-glass-chart", to: "/problems",  matchPrefix: "/problems", badge: { n: 12, kind: "warning" } },
       { id: "changes",          label: "Changes",          icon: "fa-code-branch",            to: "/changes",   matchPrefix: "/changes",  badge: { n: 7,  kind: "info" } },
       { id: "cross-tenant",     label: "Cross-tenant",     icon: "fa-grip-vertical",          to: "/cross-tenant" },

@@ -9,3 +9,4 @@ export * from "./services";
 export * from "./integrations";
 export * from "./itsm";
 export * from "./infra";
+export * from "./on-call";
