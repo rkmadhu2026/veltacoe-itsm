@@ -81,6 +81,7 @@ export function crumbsFor(pathname: string, tenant: Tenant): Crumb[] {
   const simple: Record<string, string> = {
     "/dashboard": "Operations Dashboard",
     "/on-call": "On-call schedules",
+    "/status-pages": "Status pages",
     "/services": "Services",
     "/runbooks": "Runbooks",
     "/cmdb": "CMDB",

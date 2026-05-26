@@ -45,6 +45,7 @@ export const NAV: readonly NavSection[] = [
       { id: "knowledge", label: "Knowledge base",  icon: "fa-book-open",       to: "/knowledge", matchPrefix: "/knowledge" },
       { id: "cmdb",      label: "CMDB · CIs",      icon: "fa-sitemap",         to: "/cmdb" },
       { id: "slas",      label: "SLA definitions", icon: "fa-stopwatch",       to: "/slas" },
+      { id: "status-pages", label: "Status pages", icon: "fa-signal",         to: "/status-pages", matchPrefix: "/status-pages" },
       { id: "runbooks",  label: "Runbooks",        icon: "fa-book",            to: "/runbooks", badge: { n: 184, kind: "neutral" } },
     ],
   },

@@ -353,6 +353,79 @@ export interface OnCallOverride {
   reason: string;
 }
 
+// ---------- Status pages ----------
+
+export type ComponentStatus =
+  | "operational"
+  | "degraded"
+  | "partial-outage"
+  | "major-outage"
+  | "maintenance";
+
+export type StatusIncidentStage = "investigating" | "identified" | "monitoring" | "resolved";
+export type StatusImpact = "none" | "minor" | "major" | "critical";
+export type StatusPageVisibility = "public" | "private";
+
+export interface StatusComponentGroup {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface StatusComponent {
+  id: string;
+  groupId: string;
+  name: string;
+  description: string;
+  status: ComponentStatus;
+  /** 90-day uptime as a fraction 0–1 */
+  uptime90d: number;
+  /** Optional internal service link */
+  service?: string;
+}
+
+export interface StatusIncidentUpdate {
+  id: string;
+  /** ISO timestamp */
+  at: string;
+  stage: StatusIncidentStage;
+  message: string;
+}
+
+export interface StatusIncident {
+  id: string;
+  pageId: string;
+  title: string;
+  impact: StatusImpact;
+  stage: StatusIncidentStage;
+  /** Component IDs affected by this incident */
+  componentIds: string[];
+  startedAt: string;
+  resolvedAt?: string;
+  updates: StatusIncidentUpdate[];
+}
+
+export interface StatusSubscribers {
+  email: number;
+  sms: number;
+  webhook: number;
+  rss: number;
+}
+
+export interface StatusPage {
+  id: string;
+  name: string;
+  slug: string;
+  domain: string;
+  visibility: StatusPageVisibility;
+  tenant: string;
+  description: string;
+  groups: StatusComponentGroup[];
+  subscribers: StatusSubscribers;
+  /** Average uptime across all components, last 90 days */
+  uptime90d: number;
+}
+
 // ---------- Tweaks (theme/UX state) ----------
 
 export type Density = "compact" | "comfortable" | "spacious";

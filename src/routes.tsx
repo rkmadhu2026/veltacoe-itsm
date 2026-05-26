@@ -4,6 +4,7 @@ import { Layout } from "@/shell/Layout";
 import { LandingScreen, SigninScreen, SignupScreen } from "@/screens/auth";
 import { DashboardScreen } from "@/screens/dashboard/Dashboard";
 import { OnCallScreen } from "@/screens/on-call/OnCall";
+import { StatusPagesScreen } from "@/screens/status-pages/StatusPages";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -39,6 +40,7 @@ export function AppRoutes() {
         <Route path="/incidents/:id" element={<Placeholder />} />
 
         <Route path="/on-call" element={<OnCallScreen />} />
+        <Route path="/status-pages" element={<StatusPagesScreen />} />
 
         <Route path="/problems" element={<Placeholder title="Problem management" />} />
         <Route path="/problems/new" element={<Placeholder title="New problem" />} />
