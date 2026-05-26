@@ -1,0 +1,29 @@
+.git
+.github
+node_modules
+dist
+.vite
+playwright-report
+test-results
+coverage
+.idea
+.vscode
+.playwright-mcp
+uploads
+screenshots
+scraps
+*.log
+preview.*.log
+.env
+.env.*
+
+# Legacy prototype files — not needed in image
+legacy/
+*.jsx
+index.html.legacy
+VeltaCore\ ITSM\ Platform.html
+
+# Local docs / scratch
+docs/
+*.md
+!README.md

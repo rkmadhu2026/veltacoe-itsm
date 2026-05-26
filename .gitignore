@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.vite/
+
+# Test artifacts
+playwright-report/
+test-results/
+
+# Logs
+*.log
+preview.*.log
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Misc
+*.tsbuildinfo
+coverage/
+
+# Playwright MCP scratch (browser cache, exes, dumps — not source)
+.playwright-mcp/
+
+# Design reference dumps (not consumed by the app)
+uploads/
+screenshots/
+scraps/
