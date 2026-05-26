@@ -1,0 +1,24 @@
+import type { ChatMessage, Incident } from "@/types";
+
+export const INCIDENTS: readonly Incident[] = [
+  { id: "INC-48291", sev: 1, title: "API gateway timeouts — connection pool exhausted",      service: "checkout-api",  tenant: "core-observability",  assignee: "u1",  status: "active",        age: "14m",     sla: 0.32, sloBurn: 8.4,  impacted: "12,400 sessions" },
+  { id: "INC-48290", sev: 2, title: "Elevated 5xx on application fanout, ap-south-1 AZ-b",   service: "inventory",     tenant: "observability-center", assignee: "u3", status: "active",        age: "42m",     sla: 0.68, sloBurn: 3.2,  impacted: "3 application teams" },
+  { id: "INC-48289", sev: 3, title: "Slow queries against analytics_events warehouse",       service: "warehouse",     tenant: "core-observability",   assignee: "u4", status: "mitigating",    age: "1h 12m",  sla: 0.85, sloBurn: 1.1,  impacted: "internal dashboards" },
+  { id: "INC-48288", sev: 2, title: "Keycloak CPU saturation during peak login window",      service: "auth-svc",      tenant: "application-services", assignee: "u5", status: "active",        age: "2h 4m",   sla: 0.45, sloBurn: 4.8,  impacted: "all tenants" },
+  { id: "INC-48286", sev: 4, title: "Flaky CI runs on deployment pipeline #darwin",          service: "ci-pipeline",   tenant: "platform-labs",        assignee: "u2", status: "investigating", age: "3h 18m",  sla: 0.92, sloBurn: 0.4,  impacted: "internal" },
+  { id: "INC-48282", sev: 3, title: "Queue backlog on notifications-worker exceeding threshold", service: "notifications", tenant: "observability-center", assignee: "u7", status: "mitigating", age: "4h 52m",  sla: 0.71, sloBurn: 1.8, impacted: "service alerts delayed" },
+  { id: "INC-48279", sev: 1, title: "Kubernetes control plane unreachable — cluster prod-west", service: "k8s-control", tenant: "colo-network",         assignee: "u8", status: "active",        age: "6m",      sla: 0.18, sloBurn: 12.2, impacted: "deployment blocked" },
+  { id: "INC-48276", sev: 4, title: "Certificate expiring in 7 days on fs-le-dx.finspot.in", service: "edge",          tenant: "risk-ops",             assignee: null, status: "open",          age: "12h",     sla: 0.95, sloBurn: 0.0,  impacted: "proactive" },
+];
+
+export const CHAT: readonly ChatMessage[] = [
+  { u: "u1", role: "IC",        time: "14:33", text: "Taking IC. Can someone grab the last deploy diff for checkout-api?" },
+  { u: "u3", role: "Responder", time: "14:34", text: "On it. Looking at commits since 12:00 UTC." },
+  { u: "u5", role: "Manager",   time: "14:35", text: "FYI exec comms — platform operations is engaged. I'll handle stakeholder updates." },
+  { ai: true,                   time: "14:36", text: "Pool size on payments-primary was reduced from 200 → 120 in deploy `2f8a1c` at 12:47 UTC. High likelihood this is the trigger. Rollback suggested." },
+  { u: "u3", role: "Responder", time: "14:37", text: "Confirmed — rolling back now via argo-rollbacks." },
+  { u: "u1", role: "IC",        time: "14:39", text: "Status page updated. Let's wait 3m and see if errors drop." },
+];
+
+export const incidentById = (id: string): Incident | undefined =>
+  INCIDENTS.find((i) => i.id === id);

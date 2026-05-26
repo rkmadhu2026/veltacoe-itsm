@@ -1,0 +1,10 @@
+import type { Tenant } from "@/types";
+
+export const TENANTS: readonly Tenant[] = [
+  { id: "core-observability",  name: "Core Observability",   parent: "finspot", code: "CO", color: "amber",  users: 412, incidents: 23, sev1: 1, health: 94, mttr: 18, spend: 48200, plan: "Enterprise" },
+  { id: "application-services", name: "Application Services", parent: "finspot", code: "AS", color: "teal",   users: 286, incidents: 14, sev1: 0, health: 98, mttr: 12, spend: 32100, plan: "Enterprise" },
+  { id: "observability-center", name: "Observability Center", parent: "finspot", code: "OC", color: "pink",   users: 198, incidents: 31, sev1: 2, health: 82, mttr: 42, spend: 28900, plan: "Business" },
+  { id: "risk-ops",             name: "Risk Operations",      parent: "finspot", code: "RO", color: "purple", users:  94, incidents:  9, sev1: 0, health: 96, mttr: 22, spend: 14600, plan: "Business" },
+  { id: "platform-labs",        name: "Platform Labs",        parent: "finspot", code: "PL", color: "slate",  users:  38, incidents:  4, sev1: 0, health: 99, mttr:  8, spend:  6400, plan: "Growth" },
+  { id: "colo-network",         name: "Network Operations",   parent: "finspot", code: "NO", color: "green",  users: 219, incidents: 18, sev1: 1, health: 88, mttr: 31, spend: 22800, plan: "Business" },
+];
