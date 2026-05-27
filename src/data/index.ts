@@ -11,3 +11,4 @@ export * from "./itsm";
 export * from "./infra";
 export * from "./on-call";
 export * from "./status-pages";
+export * from "./incident-context";
