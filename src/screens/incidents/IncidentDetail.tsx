@@ -11,6 +11,7 @@ import {
   statusPageLinkForIncident,
   userById,
 } from "@/data";
+import { useStatusUpdates } from "@/lib/useStatusUpdates";
 import type {
   ComponentStatus,
   StatusIncidentStage,
@@ -60,7 +61,13 @@ export function IncidentDetailScreen() {
     "We're investigating elevated failures on this service. Updates to follow as we learn more.",
   );
   const [draftStage, setDraftStage] = useState<StatusIncidentStage>("investigating");
-  const [publishedAt, setPublishedAt] = useState<string | null>(null);
+
+  const { publish, forIncident } = useStatusUpdates();
+  const publishHistory = useMemo(
+    () => (incident ? forIncident(incident.id) : []),
+    [incident, forIncident],
+  );
+  const latestPublish = publishHistory[0] ?? null;
   // ───────────────────────────────────────────────────────────────────────
 
   if (!incident) {
@@ -89,7 +96,18 @@ export function IncidentDetailScreen() {
   const primaryUser = primaryOnCall ? userById(primaryOnCall.userId) : null;
 
   const handlePublish = () => {
-    setPublishedAt(new Date().toISOString());
+    if (!statusLink || !incident) return;
+    publish({
+      incidentId: incident.id,
+      pageId: statusLink.page.id,
+      componentId: statusLink.component.id,
+      stage: draftStage,
+      message: draftMessage,
+      subscribers:
+        statusLink.page.subscribers.email +
+        statusLink.page.subscribers.sms +
+        statusLink.page.subscribers.webhook,
+    });
     setPublishOpen(false);
   };
 
@@ -126,10 +144,11 @@ export function IncidentDetailScreen() {
           <Pill kind="neutral" noDot>
             Age {incident.age}
           </Pill>
-          {publishedAt && (
+          {latestPublish && (
             <Pill kind="info">
               <i className="fa-solid fa-signal" style={{ marginRight: 4 }} />
-              Published to status page
+              Published · {publishHistory.length} update
+              {publishHistory.length === 1 ? "" : "s"}
             </Pill>
           )}
         </div>
@@ -150,11 +169,11 @@ export function IncidentDetailScreen() {
           {statusLink && (
             <button
               type="button"
-              className={`sn-btn${publishedAt ? "" : " primary"}`}
+              className={`sn-btn${latestPublish ? "" : " primary"}`}
               onClick={() => setPublishOpen(true)}
             >
               <i className="fa-solid fa-bullhorn" />{" "}
-              {publishedAt ? "Update status page" : "Publish to status page"}
+              {latestPublish ? "Update status page" : "Publish to status page"}
             </button>
           )}
           <button type="button" className="sn-btn primary">
@@ -170,7 +189,7 @@ export function IncidentDetailScreen() {
         <KpiBox label="Impacted" value={incident.impacted} sub="customers/teams" tone="neutral" />
         <KpiBox label="Service" value={service?.status ?? incident.service} sub={incident.service} tone={service?.status === "down" ? "crit" : service?.status === "degraded" ? "warn" : "ok"} />
         <KpiBox label="On-call" value={primaryUser?.name.split(" ")[0] ?? "—"} sub={primaryOnCall?.schedule.name ?? "no schedule"} tone={primaryUser ? "ok" : "neutral"} />
-        <KpiBox label="Status page" value={statusLink ? "Linked" : "—"} sub={statusLink?.page.domain ?? "no public component"} tone={statusLink ? (publishedAt ? "ok" : "warn") : "neutral"} />
+        <KpiBox label="Status page" value={statusLink ? (latestPublish ? `Updated · ${publishHistory.length}` : "Linked") : "—"} sub={statusLink?.page.domain ?? "no public component"} tone={statusLink ? (latestPublish ? "ok" : "warn") : "neutral"} />
       </div>
 
       <div className="sn-form-layout">
@@ -388,11 +407,22 @@ export function IncidentDetailScreen() {
                     Subscribers: {statusLink.page.subscribers.email.toLocaleString()} email ·{" "}
                     {statusLink.page.subscribers.sms} SMS
                   </div>
-                  {publishedAt ? (
-                    <div className="incd-publish-confirm">
-                      <i className="fa-solid fa-circle-check" /> Update posted at{" "}
-                      {new Date(publishedAt).toLocaleTimeString()}
-                    </div>
+                  {latestPublish ? (
+                    <>
+                      <div className="incd-publish-confirm">
+                        <i className="fa-solid fa-circle-check" />{" "}
+                        Last update · {STAGE_LABEL[latestPublish.stage]} at{" "}
+                        {new Date(latestPublish.at).toLocaleTimeString()}
+                      </div>
+                      <button
+                        type="button"
+                        className="sn-btn primary"
+                        style={{ width: "100%", justifyContent: "center" }}
+                        onClick={() => setPublishOpen(true)}
+                      >
+                        <i className="fa-solid fa-bullhorn" /> Post another update
+                      </button>
+                    </>
                   ) : (
                     <button
                       type="button"
@@ -402,6 +432,26 @@ export function IncidentDetailScreen() {
                     >
                       <i className="fa-solid fa-bullhorn" /> Publish update
                     </button>
+                  )}
+                  {publishHistory.length > 1 && (
+                    <details className="incd-publish-history">
+                      <summary>
+                        {publishHistory.length} updates posted on this incident
+                      </summary>
+                      <ol>
+                        {publishHistory.map((p) => (
+                          <li key={p.id}>
+                            <span className="incd-publish-stage">
+                              {STAGE_LABEL[p.stage]}
+                            </span>
+                            <span className="incd-publish-time">
+                              {new Date(p.at).toLocaleString()}
+                            </span>
+                            <span className="incd-publish-msg">{p.message}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </details>
                   )}
                 </div>
               </div>
@@ -546,6 +596,14 @@ export function IncidentDetailScreen() {
 
         .incd-publish-confirm{display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:6px;background:rgba(16,185,129,.08);color:#065f46;font-size:11.5px}
         .incd-publish-confirm i{color:#10b981}
+        .incd-publish-history{font-size:11.5px}
+        .incd-publish-history>summary{cursor:pointer;color:var(--fg-subtle);padding:4px 0}
+        .incd-publish-history>summary:hover{color:var(--fg)}
+        .incd-publish-history>ol{margin:8px 0 0;padding:0 0 0 8px;list-style:none;border-left:2px solid var(--border,#e2e8f0);display:flex;flex-direction:column;gap:8px}
+        .incd-publish-history>ol>li{display:flex;flex-direction:column;gap:2px;font-size:11.5px}
+        .incd-publish-stage{font-weight:600;color:var(--accent);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em}
+        .incd-publish-time{color:var(--fg-subtle);font-size:10.5px}
+        .incd-publish-msg{color:var(--fg)}
 
         .incd-modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.5);display:grid;place-items:center;z-index:2147483640;padding:24px}
         .incd-modal{background:var(--bg,#fff);border-radius:12px;max-width:560px;width:100%;max-height:calc(100vh - 48px);overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.3)}

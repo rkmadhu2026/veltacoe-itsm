@@ -1,9 +1,21 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sev, UserById } from "@/components";
-import { INCIDENTS, SERVICES, TENANTS, TIMELINE_EVENTS } from "@/data";
+import {
+  INCIDENTS,
+  SCHEDULES,
+  SERVICES,
+  STATUS_INCIDENTS,
+  STATUS_PAGES,
+  TENANTS,
+  TIMELINE_EVENTS,
+  rollUpStatus,
+  whoIsOnCall,
+} from "@/data";
+import { useStatusUpdates } from "@/lib/useStatusUpdates";
 import { useTenant } from "@/shell/TenantContext";
+import { userById } from "@/data/users";
 
 export function DashboardScreen() {
   const { tenant } = useTenant();
@@ -14,6 +26,26 @@ export function DashboardScreen() {
 
   const activeSev1 = INCIDENTS.filter((i) => i.sev === 1 && i.status === "active").length;
   const activeIncidents = INCIDENTS.filter((i) => i.status === "active").length;
+
+  // Live on-call snapshot across every schedule — used for the side rail.
+  const now = useMemo(() => new Date(), []);
+  const liveOnCall = useMemo(
+    () =>
+      SCHEDULES.map((s) => ({ schedule: s, current: whoIsOnCall(s.id, now) })).filter(
+        (x) => x.current,
+      ),
+    [now],
+  );
+
+  // Status-page rollups across every page + active status incidents.
+  const statusSummary = useMemo(
+    () =>
+      STATUS_PAGES.map((p) => ({ page: p, rollup: rollUpStatus(p.id) })),
+    [],
+  );
+  const activeStatusIncidents = STATUS_INCIDENTS.filter((i) => i.stage !== "resolved");
+
+  const { updates: publishedUpdates } = useStatusUpdates();
 
   return (
     <div className="page page-fade sn-dash">
@@ -634,6 +666,107 @@ export function DashboardScreen() {
                   KB-2114
                 </Link>
               </div>
+            </div>
+          </div>
+
+          <div className="sn-side-card">
+            <div className="sn-side-head">
+              On-call right now
+              <span className="sn-side-count">{liveOnCall.length}</span>
+            </div>
+            <div className="sn-side-body">
+              {liveOnCall.length === 0 ? (
+                <p style={{ fontSize: 12, color: "var(--fg-subtle)", margin: 0 }}>
+                  No active schedules.
+                </p>
+              ) : (
+                liveOnCall.map(({ schedule, current }) => {
+                  if (!current) return null;
+                  const u = userById(current.userId);
+                  return (
+                    <div key={schedule.id} className="sn-related-row">
+                      <div style={{ minWidth: 0 }}>
+                        <div className="sn-related-title" style={{ fontSize: 12 }}>
+                          <UserById id={current.userId} showName={true} />
+                        </div>
+                        <div className="sn-related-meta">
+                          {schedule.name}
+                          {current.overridden && " · override"}
+                        </div>
+                      </div>
+                      <Link to="/on-call" className="sn-link" style={{ fontSize: 11 }}>
+                        →
+                      </Link>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+
+          <div className="sn-side-card">
+            <div className="sn-side-head">
+              Status pages
+              {activeStatusIncidents.length > 0 && (
+                <span className="sn-side-count">{activeStatusIncidents.length} active</span>
+              )}
+            </div>
+            <div className="sn-side-body">
+              {statusSummary.map(({ page, rollup }) => {
+                const color =
+                  rollup.tone === "ok" ? "#10b981" : rollup.tone === "warn" ? "#f59e0b" : "#ef4444";
+                return (
+                  <Link
+                    key={page.id}
+                    to="/status-pages"
+                    className="sn-related-row"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <div style={{ minWidth: 0 }}>
+                      <div className="sn-related-title" style={{ fontSize: 12 }}>
+                        {page.name}
+                      </div>
+                      <div
+                        className="sn-related-meta"
+                        style={{ display: "flex", alignItems: "center", gap: 6 }}
+                      >
+                        <span
+                          style={{
+                            display: "inline-block",
+                            width: 8,
+                            height: 8,
+                            borderRadius: 4,
+                            background: color,
+                          }}
+                        />
+                        <span>{rollup.label}</span>
+                      </div>
+                    </div>
+                    <span className="text-mute" style={{ fontSize: 11 }}>
+                      {(page.uptime90d * 100).toFixed(2)}%
+                    </span>
+                  </Link>
+                );
+              })}
+              {publishedUpdates.length > 0 && (
+                <div
+                  style={{
+                    marginTop: 8,
+                    padding: "6px 10px",
+                    background: "rgba(16,185,129,.08)",
+                    color: "#065f46",
+                    borderRadius: 6,
+                    fontSize: 11,
+                  }}
+                >
+                  <i
+                    className="fa-solid fa-circle-check"
+                    style={{ color: "#10b981", marginRight: 6 }}
+                  />
+                  {publishedUpdates.length} update
+                  {publishedUpdates.length === 1 ? "" : "s"} published this session
+                </div>
+              )}
             </div>
           </div>
 
