@@ -1,0 +1,135 @@
+import type {
+  AssetLifecycle,
+  AuditEvent,
+  CatalogCategoryDef,
+  CatalogModel,
+  CatalogVendor,
+  CollectorProfile,
+  Criticality,
+  DiscoveryCandidate,
+} from "@/types";
+
+// Backend-driven catalog: Category → Vendor → Family → Model → Firmware →
+// Collector profile. The onboarding wizard reads this hierarchy; nothing is
+// hard-coded in the screens themselves.
+
+export const DEVICE_CATEGORIES: readonly CatalogCategoryDef[] = [
+  { id: "firewall",   label: "Firewall",          icon: "fa-shield-halved",    group: "Network" },
+  { id: "switch",     label: "Switch",            icon: "fa-network-wired",    group: "Network" },
+  { id: "router",     label: "Router",            icon: "fa-route",            group: "Network" },
+  { id: "loadbal",    label: "Load balancer",     icon: "fa-scale-balanced",   group: "Network" },
+  { id: "storage",    label: "Storage / SAN",     icon: "fa-database",         group: "Facility" },
+  { id: "ups",        label: "UPS / PDU",         icon: "fa-plug-circle-bolt", group: "Facility" },
+  { id: "server_bmc", label: "Server BMC",        icon: "fa-microchip",        group: "Compute" },
+  { id: "linux-srv",  label: "Linux server",      icon: "fa-linux",            group: "Compute" },
+  { id: "win-srv",    label: "Windows server",    icon: "fa-windows",          group: "Compute" },
+  { id: "vm",         label: "Virtual machine",   icon: "fa-cube",             group: "Compute" },
+  { id: "kubernetes", label: "Kubernetes",        icon: "fa-dharmachakra",     group: "Platform" },
+  { id: "database",   label: "Database",          icon: "fa-server",           group: "Application" },
+  { id: "queue",      label: "Queue / broker",    icon: "fa-list-check",       group: "Application" },
+  { id: "app_api",    label: "Application / API", icon: "fa-diagram-project",  group: "Application" },
+  { id: "synthetic",  label: "Synthetic check",   icon: "fa-heart-pulse",      group: "Application" },
+];
+
+export const COLLECTOR_PROFILES: readonly CollectorProfile[] = [
+  { id: "cp-node",     name: "Linux · node_exporter",     transport: "node_exporter",    authKind: "ssh_key",  requiresVault: true,  metrics: ["cpu", "memory", "disk", "filesystem", "network", "systemd"] },
+  { id: "cp-win",      name: "Windows · windows_exporter", transport: "windows_exporter", authKind: "winrm",   requiresVault: true,  metrics: ["cpu", "memory", "disk", "service", "iis", "eventlog"] },
+  { id: "cp-snmp3",    name: "Network · SNMPv3 authPriv", transport: "snmp_v3",          authKind: "snmp_v3",  requiresVault: true,  metrics: ["if_counters", "cpu", "sensors", "entity_mib"] },
+  { id: "cp-snmp2",    name: "Network · SNMP v2c",        transport: "snmp_v2c",         authKind: "snmp_v2c", requiresVault: true,  metrics: ["if_counters", "sensors"] },
+  { id: "cp-redfish",  name: "Server · Redfish HTTPS",    transport: "redfish",          authKind: "redfish",  requiresVault: true,  metrics: ["thermal", "power", "raid", "fans", "firmware", "sel"] },
+  { id: "cp-otel",     name: "App · OpenTelemetry SDK",   transport: "otel",             authKind: "otel",     requiresVault: false, metrics: ["traces", "red_metrics", "logs"] },
+  { id: "cp-blackbox", name: "Synthetic · blackbox",      transport: "blackbox",         authKind: "none",     requiresVault: false, metrics: ["http", "tcp", "dns", "ssl_expiry"] },
+  { id: "cp-vendor",   name: "Vendor API · REST/eAPI",    transport: "vendor_api",       authKind: "bearer",   requiresVault: true,  metrics: ["inventory", "sessions", "health"] },
+  { id: "cp-kube",     name: "Kubernetes · kube-state",   transport: "kube",             authKind: "bearer",   requiresVault: true,  metrics: ["pods", "nodes", "deployments", "restarts"] },
+];
+
+// Generic safe profiles applied to unverified / partially-supported devices.
+export const GENERIC_PROFILES: readonly string[] = [
+  "generic_snmp_switch_v1",
+  "generic_snmp_router_v1",
+  "generic_snmp_firewall_v1",
+  "generic_snmp_storage_v1",
+  "generic_snmp_ups_v1",
+  "generic_redfish_bmc_v1",
+];
+
+export const CATALOG_VENDORS: readonly CatalogVendor[] = [
+  { id: "cisco",    name: "Cisco",      categories: ["switch", "router", "firewall"],          models: 6 },
+  { id: "arista",   name: "Arista",     categories: ["switch"],                                 models: 2 },
+  { id: "juniper",  name: "Juniper",    categories: ["switch", "router"],                       models: 2 },
+  { id: "fortinet", name: "Fortinet",   categories: ["firewall"],                               models: 1 },
+  { id: "paloalto", name: "Palo Alto",  categories: ["firewall"],                               models: 2 },
+  { id: "f5",       name: "F5",         categories: ["loadbal"],                                models: 1 },
+  { id: "dell",     name: "Dell",       categories: ["server_bmc", "linux-srv", "win-srv"],     models: 2 },
+  { id: "hpe",      name: "HPE",        categories: ["server_bmc"],                             models: 1 },
+  { id: "netapp",   name: "NetApp",     categories: ["storage"],                                models: 1 },
+  { id: "pure",     name: "Pure",       categories: ["storage"],                                models: 1 },
+  { id: "apc",      name: "APC",        categories: ["ups"],                                    models: 1 },
+];
+
+export const CATALOG_MODELS: readonly CatalogModel[] = [
+  { id: "m-pa5450",   vendor: "paloalto", family: "PA-5400",       model: "PA-5450",             category: "firewall",   firmware: ["PAN-OS 11.1.3", "PAN-OS 11.0.4"], collectorProfile: "cp-snmp3",   status: "SUPPORTED",           capabilities: ["sessions", "threat", "ha", "netflow"] },
+  { id: "m-pa3260",   vendor: "paloalto", family: "PA-3200",       model: "PA-3260",             category: "firewall",   firmware: ["PAN-OS 11.0.4"],                  collectorProfile: "cp-snmp3",   status: "SUPPORTED",           capabilities: ["sessions", "threat", "ha"] },
+  { id: "m-fg600f",   vendor: "fortinet", family: "FortiGate",     model: "FortiGate 600F",      category: "firewall",   firmware: ["FortiOS 7.4.2", "FortiOS 7.2.8"], collectorProfile: "cp-snmp3",   status: "SUPPORTED",           capabilities: ["sessions", "vpn", "ha"] },
+  { id: "m-fp4145",   vendor: "cisco",    family: "Firepower",     model: "Firepower 4145",      category: "firewall",   firmware: ["FTD 7.4.1"],                      collectorProfile: "cp-snmp3",   status: "PARTIALLY_SUPPORTED", capabilities: ["sessions", "ha"] },
+  { id: "m-cat9500",  vendor: "cisco",    family: "Catalyst 9500", model: "Catalyst 9500-48Y4C", category: "switch",     firmware: ["IOS-XE 17.12", "IOS-XE 17.9"],    collectorProfile: "cp-snmp3",   status: "SUPPORTED",           capabilities: ["if_counters", "stackwise", "poe"] },
+  { id: "m-7280r3",   vendor: "arista",   family: "7280R3",        model: "7280R3",              category: "switch",     firmware: ["EOS 4.31.2F"],                    collectorProfile: "cp-vendor",  status: "SUPPORTED",           capabilities: ["if_counters", "streaming_telemetry", "eapi"] },
+  { id: "m-7050x3",   vendor: "arista",   family: "7050X3",        model: "7050X3",              category: "switch",     firmware: ["EOS 4.30.5M"],                    collectorProfile: "cp-snmp3",   status: "SUPPORTED",           capabilities: ["if_counters", "vxlan"] },
+  { id: "m-ex4650",   vendor: "juniper",  family: "EX4650",        model: "EX4650-48Y",          category: "switch",     firmware: ["Junos 22.4R3"],                   collectorProfile: "cp-snmp3",   status: "SUPPORTED",           capabilities: ["if_counters", "evpn"] },
+  { id: "m-asr1006",  vendor: "cisco",    family: "ASR 1000",      model: "ASR 1006-X",          category: "router",     firmware: ["IOS-XE 17.9"],                    collectorProfile: "cp-snmp3",   status: "SUPPORTED",           capabilities: ["bgp", "if_counters", "qos"] },
+  { id: "m-mx204",    vendor: "juniper",  family: "MX",            model: "MX204",               category: "router",     firmware: ["Junos 22.2R3"],                   collectorProfile: "cp-snmp3",   status: "SUPPORTED",           capabilities: ["bgp", "if_counters", "mpls"] },
+  { id: "m-bigip",    vendor: "f5",       family: "BIG-IP",        model: "BIG-IP i5800",        category: "loadbal",    firmware: ["TMOS 17.1.1"],                    collectorProfile: "cp-vendor",  status: "SUPPORTED",           capabilities: ["vs_stats", "pool_health", "ha", "istats"] },
+  { id: "m-r760",     vendor: "dell",     family: "PowerEdge",     model: "PowerEdge R760",      category: "server_bmc", firmware: ["iDRAC 7.10", "BIOS 1.6"],         collectorProfile: "cp-redfish", status: "SUPPORTED",           capabilities: ["thermal", "power", "raid", "sel"] },
+  { id: "m-r750",     vendor: "dell",     family: "PowerEdge",     model: "PowerEdge R750",      category: "server_bmc", firmware: ["iDRAC 6.10"],                     collectorProfile: "cp-redfish", status: "SUPPORTED",           capabilities: ["thermal", "power", "raid"] },
+  { id: "m-dl380",    vendor: "hpe",      family: "ProLiant",      model: "ProLiant DL380 Gen11", category: "server_bmc", firmware: ["iLO 6 1.55"],                    collectorProfile: "cp-redfish", status: "SUPPORTED",           capabilities: ["thermal", "power", "smart_array"] },
+  { id: "m-aff400",   vendor: "netapp",   family: "AFF",           model: "AFF A400",            category: "storage",    firmware: ["ONTAP 9.13.1"],                   collectorProfile: "cp-vendor",  status: "SUPPORTED",           capabilities: ["aggr", "volume", "latency", "capacity"] },
+  { id: "m-fax70",    vendor: "pure",     family: "FlashArray",    model: "FlashArray //X70 R3", category: "storage",    firmware: ["Purity 6.6.4"],                   collectorProfile: "cp-vendor",  status: "SUPPORTED",           capabilities: ["capacity", "latency", "replication"] },
+  { id: "m-sympx",    vendor: "apc",      family: "Symmetra",      model: "Symmetra PX 160kW",   category: "ups",        firmware: ["AOS 7.0.4"],                      collectorProfile: "cp-snmp2",   status: "SUPPORTED",           capabilities: ["load", "runtime", "battery", "bypass"] },
+];
+
+export const CRITICALITY_TIERS: readonly { id: Criticality; label: string; sla: string }[] = [
+  { id: "platinum", label: "Platinum", sla: "24×7 · 5-min response" },
+  { id: "gold",     label: "Gold",     sla: "24×7 · 15-min response" },
+  { id: "silver",   label: "Silver",   sla: "Business hours · 1h" },
+  { id: "bronze",   label: "Bronze",   sla: "Best effort" },
+];
+
+// Auto-discovery review queue. These are candidates only — nothing here is in
+// inventory until a NOC operator approves it (discovery never auto-commits).
+export const DISCOVERY_CANDIDATES: readonly DiscoveryCandidate[] = [
+  { id: "disc-1", ip: "10.10.3.14",  site: "dc-blr-1", source: "snmp",       confidence: 0.94, sysName: "SW-BLR-TOR-14",   sysDescr: "Arista Networks EOS 4.30.5M",        normalizedVendor: "Arista",   normalizedModel: "7050X3",        serial: "JPE21140xx", firmware: "EOS 4.30.5M",  matchedModel: "m-7050x3", suggestedProfile: "cp-snmp3",   status: "SUPPORTED",           discoveredAt: "6m ago"  },
+  { id: "disc-2", ip: "10.20.2.9",   site: "dc-fra-1", source: "lldp",       confidence: 0.71, sysName: "fra-dist-09",     sysDescr: "Juniper Networks EX4650",            normalizedVendor: "Juniper",  normalizedModel: "EX4650-48Y",    serial: "JN12A9xx",   firmware: "Junos 22.4R3", matchedModel: "m-ex4650", suggestedProfile: "cp-snmp3",   status: "PARTIALLY_SUPPORTED", discoveredAt: "18m ago" },
+  { id: "disc-3", ip: "10.10.7.210", site: "dc-blr-1", source: "cidr_sweep", confidence: 0.38, sysName: "unknown-210",     sysDescr: "Linux 5.15 armv7l SNMPv2 agent",     normalizedVendor: "MikroTik", normalizedModel: "CRS326",        serial: "—",          firmware: "RouterOS 7.x", matchedModel: null,       suggestedProfile: "generic_snmp_switch_v1", status: "DISCOVERED_UNVERIFIED", discoveredAt: "24m ago" },
+  { id: "disc-4", ip: "10.30.50.4",  site: "dc-nyc-1", source: "vendor_api", confidence: 0.88, sysName: "nyc-nas-04",      sysDescr: "NetApp Release 9.13.1",              normalizedVendor: "NetApp",   normalizedModel: "AFF A400",      serial: "700000xx",   firmware: "ONTAP 9.13.1", matchedModel: "m-aff400", suggestedProfile: "cp-vendor",  status: "SUPPORTED",           discoveredAt: "31m ago" },
+  { id: "disc-5", ip: "10.10.99.20", site: "dc-blr-1", source: "snmp",       confidence: 0.20, sysName: "pdu-row-c",       sysDescr: "Eaton ePDU G3 SNMPv2",               normalizedVendor: "Eaton",    normalizedModel: "ePDU G3",       serial: "—",          firmware: "3.4.x",        matchedModel: null,       suggestedProfile: "generic_snmp_ups_v1",    status: "DISCOVERED_UNVERIFIED", discoveredAt: "44m ago" },
+];
+
+// Asset lifecycle overrides. Devices default to "active"; a few sit in other
+// states to exercise the lifecycle UI. Keys are Device ids from infra.ts.
+const LIFECYCLE_OVERRIDES: Readonly<Record<string, AssetLifecycle>> = {
+  "LNX-K8S-W-05": "pending_review",
+  "SW-BLR-TOR-13": "pending_review",
+  "EXP-FRA-VSPHERE": "pending_review",
+};
+
+export const assetLifecycle = (deviceId: string): AssetLifecycle =>
+  LIFECYCLE_OVERRIDES[deviceId] ?? "active";
+
+export const catalogModelById = (id: string): CatalogModel | undefined =>
+  CATALOG_MODELS.find((m) => m.id === id);
+
+export const collectorProfileById = (id: string): CollectorProfile | undefined =>
+  COLLECTOR_PROFILES.find((p) => p.id === id);
+
+// Immutable audit trail (append-only). Newest first.
+export const AUDIT_EVENTS: readonly AuditEvent[] = [
+  { id: "au-9", at: "2m ago",  actor: "u2", action: "approve",      target: "disc-4 · nyc-nas-04",     tenant: "observability-center", detail: "Approved discovery candidate → mapped to NetApp AFF A400 (cp-vendor)" },
+  { id: "au-8", at: "14m ago", actor: "u4", action: "silence",      target: "ESX-BLR-01",              tenant: "platform-labs",        detail: "Created silence s-101 for DatastoreLatency (3h)" },
+  { id: "au-7", at: "38m ago", actor: "u6", action: "onboard",      target: "SW-FRA-DIST-01",          tenant: "colo-network",         detail: "Onboarded Juniper EX4650-48Y with SNMPv3 authPriv (vault ref only)" },
+  { id: "au-6", at: "1h ago",  actor: "u2", action: "discover",     target: "10.10.3.14",              tenant: "colo-network",         detail: "SNMP sweep produced candidate disc-1 (confidence 0.94)" },
+  { id: "au-5", at: "2h ago",  actor: "u4", action: "update",       target: "WIN-SQL-PROD-01",         tenant: "application-services", detail: "Changed criticality bronze → gold; owner_team → DBA" },
+  { id: "au-4", at: "3h ago",  actor: "u6", action: "automation",   target: "orders-worker-7f",        tenant: "platform-labs",        detail: "StackStorm restart proposed (read-only) — awaiting approval" },
+  { id: "au-3", at: "5h ago",  actor: "u2", action: "decommission", target: "LNX-LEGACY-02",           tenant: "platform-labs",        detail: "Asset moved active → decommissioned; targets removed from Prometheus" },
+  { id: "au-2", at: "6h ago",  actor: "u4", action: "onboard",      target: "BARE-BLR-DB-02",          tenant: "application-services", detail: "Onboarded Dell PowerEdge R750 via Redfish HTTPS (cp-redfish)" },
+  { id: "au-1", at: "8h ago",  actor: "u6", action: "approve",      target: "route-critical",          tenant: "core-observability",   detail: "Approved Alertmanager route revision r14 (critical → PagerDuty)" },
+];

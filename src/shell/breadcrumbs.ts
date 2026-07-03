@@ -90,7 +90,7 @@ export function crumbsFor(pathname: string, tenant: Tenant): Crumb[] {
     "/reports": "Reports & analytics",
     "/apm": "APM & traces",
     "/logs": "Logs",
-    "/alerts": "Alert conditions",
+    "/alerts": "Alerts",
     "/entity-map": "Entity map",
     "/users": "People & roles",
     "/settings": "Settings",

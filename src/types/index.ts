@@ -447,3 +447,264 @@ export interface Tweaks {
   showSparklines: boolean;
   fontSize: number;
 }
+
+// ---------- Alerting (Alertmanager-style) ----------
+// Prometheus alert rules evaluate to alert instances; Alertmanager groups,
+// dedupes, inhibits, silences, and routes them to receivers. We model the
+// whole pipeline so the Alerts module is a faithful control-plane view.
+
+export type AlertLabelSeverity = "critical" | "warning" | "info";
+export type AlertRuleState = "firing" | "pending" | "inactive";
+export type AlertInstanceState =
+  | "firing"
+  | "pending"
+  | "silenced"
+  | "inhibited"
+  | "resolved";
+
+export interface AlertRule {
+  id: string;
+  /** `alertname` label. */
+  name: string;
+  /** Rule group the rule belongs to (Prometheus rule file group). */
+  group: string;
+  /** PromQL expression. */
+  expr: string;
+  /** `for:` clause — how long the condition must hold before firing. */
+  forDuration: string;
+  severity: AlertLabelSeverity;
+  summary: string;
+  runbook: string | null;
+  state: AlertRuleState;
+  /** Number of active instances currently produced by this rule. */
+  firing: number;
+}
+
+export interface AlertInstance {
+  id: string;
+  ruleId: string;
+  alertname: string;
+  severity: AlertLabelSeverity;
+  state: AlertInstanceState;
+  /** Tenant id (must match a Tenant.id). */
+  tenant: string;
+  service: string;
+  component: string;
+  /** Host / device the alert fired on. */
+  instance: string;
+  site: string;
+  ownerTeam: string;
+  /** Relative time the alert started firing. */
+  startsAt: string;
+  /** Current sample value that tripped the rule. */
+  value: string;
+  summary: string;
+  runbook: string | null;
+  /** Alertmanager fingerprint — stable identity for dedup. */
+  fingerprint: string;
+  /** Id of the silence muting this instance, when silenced. */
+  silencedBy?: string;
+  /** Fingerprint of the alert inhibiting this one, when inhibited. */
+  inhibitedBy?: string;
+}
+
+export type ReceiverKind =
+  | "pagerduty"
+  | "email"
+  | "slack"
+  | "teams"
+  | "webhook"
+  | "redmine";
+
+export interface AlertReceiver {
+  id: string;
+  name: string;
+  kind: ReceiverKind;
+  /** Human-readable destination (channel, address, service key ref). */
+  target: string;
+  /** Vault reference for the secret — never the secret itself. */
+  vaultRef: string | null;
+  enabled: boolean;
+}
+
+export interface AlertRoute {
+  id: string;
+  /** Label matchers that steer an alert down this branch. */
+  match: Record<string, string>;
+  /** Receiver id. */
+  receiver: string;
+  groupBy: string[];
+  groupWait: string;
+  groupInterval: string;
+  repeatInterval: string;
+  /** Keep evaluating sibling routes after a match. */
+  cont: boolean;
+  children?: AlertRoute[];
+}
+
+export type SilenceStatus = "active" | "pending" | "expired";
+
+export interface AlertSilence {
+  id: string;
+  matchers: string[];
+  /** User id that created the silence. */
+  createdBy: string;
+  comment: string;
+  startsAt: string;
+  endsAt: string;
+  status: SilenceStatus;
+  /** Number of alert instances currently muted. */
+  affected: number;
+}
+
+export interface InhibitionRule {
+  id: string;
+  sourceMatch: string;
+  targetMatch: string;
+  equal: string[];
+  description: string;
+}
+
+export interface MaintenanceWindow {
+  id: string;
+  name: string;
+  scope: string;
+  startsAt: string;
+  endsAt: string;
+  status: "scheduled" | "active" | "ended";
+  createdBy: string;
+}
+
+// A grouped bucket of alert instances, as Alertmanager would present them.
+export interface AlertGroup {
+  key: string;
+  labels: Record<string, string>;
+  receiver: string;
+  /** Alert instance ids in the group. */
+  members: string[];
+}
+
+// ---------- Device catalog / onboarding ----------
+// Backend-driven catalog hierarchy: Category → Vendor → Family → Model →
+// Firmware → Collector profile. The frontend never hard-codes models.
+
+export type CatalogModelStatus =
+  | "SUPPORTED"
+  | "PARTIALLY_SUPPORTED"
+  | "GENERIC_SNMP"
+  | "DISCOVERED_UNVERIFIED"
+  | "RETIRED"
+  | "BLOCKED";
+
+export type CollectorTransport =
+  | "node_exporter"
+  | "windows_exporter"
+  | "snmp_v2c"
+  | "snmp_v3"
+  | "redfish"
+  | "otel"
+  | "blackbox"
+  | "vendor_api"
+  | "kube";
+
+export type CollectorAuthKind =
+  | "none"
+  | "snmp_v2c"
+  | "snmp_v3"
+  | "redfish"
+  | "winrm"
+  | "ssh_key"
+  | "bearer"
+  | "otel";
+
+export interface CollectorProfile {
+  id: string;
+  name: string;
+  transport: CollectorTransport;
+  authKind: CollectorAuthKind;
+  /** Whether the profile requires a Vault-stored secret to poll. */
+  requiresVault: boolean;
+  /** Headline metric families this profile emits. */
+  metrics: string[];
+}
+
+export interface CatalogVendor {
+  id: string;
+  name: string;
+  /** Category ids this vendor ships devices for. */
+  categories: string[];
+  models: number;
+}
+
+export interface CatalogModel {
+  id: string;
+  vendor: string;
+  family: string;
+  model: string;
+  /** Category id (maps to DeviceKindId where applicable). */
+  category: string;
+  firmware: string[];
+  collectorProfile: string;
+  status: CatalogModelStatus;
+  capabilities: string[];
+}
+
+export interface CatalogCategoryDef {
+  id: string;
+  label: string;
+  icon: string;
+  group: "Network" | "Compute" | "Platform" | "Application" | "Facility";
+}
+
+export type Criticality = "platinum" | "gold" | "silver" | "bronze";
+
+// ---------- Discovery + asset lifecycle ----------
+// Asset lifecycle: discovered → pending_review → active → decommissioned.
+// Auto-discovery NEVER auto-commits — candidates land in a human review queue.
+
+export type AssetLifecycle =
+  | "discovered"
+  | "pending_review"
+  | "active"
+  | "decommissioned";
+
+export type DiscoverySource = "snmp" | "vendor_api" | "lldp" | "cdp" | "agent" | "cidr_sweep";
+
+export interface DiscoveryCandidate {
+  id: string;
+  ip: string;
+  site: string;
+  source: DiscoverySource;
+  /** 0–1 confidence of the fingerprint match. */
+  confidence: number;
+  sysName: string;
+  sysDescr: string;
+  normalizedVendor: string;
+  normalizedModel: string;
+  serial: string;
+  firmware: string;
+  /** Matched catalog model id, or null when unrecognized. */
+  matchedModel: string | null;
+  suggestedProfile: string;
+  status: CatalogModelStatus;
+  discoveredAt: string;
+}
+
+export type AuditAction =
+  | "onboard"
+  | "update"
+  | "approve"
+  | "silence"
+  | "decommission"
+  | "discover"
+  | "automation";
+
+export interface AuditEvent {
+  id: string;
+  at: string;
+  actor: string;
+  action: AuditAction;
+  target: string;
+  tenant: string;
+  detail: string;
+}

@@ -7,6 +7,12 @@ import { IncidentDetailScreen } from "@/screens/incidents/IncidentDetail";
 import { IncidentsListScreen } from "@/screens/incidents/IncidentsList";
 import { OnCallScreen } from "@/screens/on-call/OnCall";
 import { StatusPagesScreen } from "@/screens/status-pages/StatusPages";
+import { AlertsScreen } from "@/screens/alerts/Alerts";
+import { NocOverviewScreen } from "@/screens/infra/NocOverview";
+import { AssetInventoryScreen } from "@/screens/infra/AssetInventory";
+import { Node360Screen } from "@/screens/infra/Node360";
+import { TopologyScreen } from "@/screens/infra/Topology";
+import { OnboardingScreen } from "@/screens/onboarding/Onboarding";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -66,16 +72,16 @@ export function AppRoutes() {
 
         <Route path="/apm" element={<Placeholder title="APM & traces" />} />
         <Route path="/logs" element={<Placeholder title="Logs" />} />
-        <Route path="/alerts" element={<Placeholder title="Alerts" />} />
+        <Route path="/alerts" element={<AlertsScreen />} />
         <Route path="/entity-map" element={<Placeholder title="Entity map" />} />
 
-        <Route path="/infra" element={<Placeholder title="Infrastructure" />} />
-        <Route path="/infra/assets" element={<Placeholder title="Asset inventory" />} />
-        <Route path="/infra/topology" element={<Placeholder title="Network topology" />} />
+        <Route path="/infra" element={<NocOverviewScreen />} />
+        <Route path="/infra/assets" element={<AssetInventoryScreen />} />
+        <Route path="/infra/topology" element={<TopologyScreen />} />
         <Route path="/infra/vms" element={<Placeholder title="Virtual machines" />} />
         <Route path="/infra/rack" element={<Placeholder title="Datacenter rack" />} />
         <Route path="/infra/exporters" element={<Placeholder title="Exporters" />} />
-        <Route path="/infra/device/:id" element={<Placeholder />} />
+        <Route path="/infra/device/:id" element={<Node360Screen />} />
 
         <Route path="/integrations" element={<Placeholder title="Integrations" />} />
         <Route path="/integrations/:name" element={<Placeholder />} />
@@ -87,7 +93,7 @@ export function AppRoutes() {
         <Route path="/users" element={<Placeholder title="People & roles" />} />
         <Route path="/settings" element={<Placeholder title="Settings" />} />
         <Route path="/cross-tenant" element={<Placeholder title="Cross-tenant" />} />
-        <Route path="/onboarding" element={<Placeholder title="Onboarding" />} />
+        <Route path="/onboarding" element={<OnboardingScreen />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
