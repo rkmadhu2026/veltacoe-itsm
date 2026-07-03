@@ -19,9 +19,7 @@ export function Heatmap({ rows = 7, cols = 24, seed = 1 }: HeatmapProps) {
             aspectRatio: 1,
             borderRadius: 2,
             background:
-              intensity > 0.1
-                ? `rgba(37, 99, 235, ${0.08 + intensity * 0.8})`
-                : "var(--bg-muted)",
+              intensity > 0.1 ? `rgba(37, 99, 235, ${0.08 + intensity * 0.8})` : "var(--bg-muted)",
           }}
         />,
       );

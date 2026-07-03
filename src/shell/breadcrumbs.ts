@@ -58,11 +58,16 @@ export function crumbsFor(pathname: string, tenant: Tenant): Crumb[] {
       { label: id ?? "Device" },
     ];
   }
-  if (pathname === "/infra/assets") return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Asset inventory" }];
-  if (pathname === "/infra/topology") return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Topology" }];
-  if (pathname === "/infra/vms") return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Virtual machines" }];
-  if (pathname === "/infra/rack") return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Datacenter rack" }];
-  if (pathname === "/infra/exporters") return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Exporters" }];
+  if (pathname === "/infra/assets")
+    return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Asset inventory" }];
+  if (pathname === "/infra/topology")
+    return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Topology" }];
+  if (pathname === "/infra/vms")
+    return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Virtual machines" }];
+  if (pathname === "/infra/rack")
+    return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Datacenter rack" }];
+  if (pathname === "/infra/exporters")
+    return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Exporters" }];
   if (pathname === "/infra") return [...base, { label: "Infrastructure" }];
 
   if (pathname.startsWith("/admin/")) {

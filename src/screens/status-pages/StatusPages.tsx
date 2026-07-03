@@ -7,11 +7,7 @@ import {
   incidentsForPage,
   rollUpStatus,
 } from "@/data/status-pages";
-import type {
-  ComponentStatus,
-  StatusImpact,
-  StatusIncidentStage,
-} from "@/types";
+import type { ComponentStatus, StatusImpact, StatusIncidentStage } from "@/types";
 
 // Presentation helpers — single source of truth for status colors/labels
 // so the page header, component dots, and uptime bars stay aligned.
@@ -54,12 +50,11 @@ export function StatusPagesScreen() {
 
   const activeIncidents = incidents.filter((i) => i.stage !== "resolved");
   const totalIncidents = STATUS_INCIDENTS.length;
-  const totalSubscribers =
-    STATUS_PAGES.reduce(
-      (sum, p) =>
-        sum + p.subscribers.email + p.subscribers.sms + p.subscribers.webhook + p.subscribers.rss,
-      0,
-    );
+  const totalSubscribers = STATUS_PAGES.reduce(
+    (sum, p) =>
+      sum + p.subscribers.email + p.subscribers.sms + p.subscribers.webhook + p.subscribers.rss,
+    0,
+  );
 
   return (
     <div className="page page-fade sn-dash">
@@ -73,7 +68,9 @@ export function StatusPagesScreen() {
 
       <div className="sn-form-header">
         <div className="sn-form-title-row">
-          <span className="sn-rec-number">SPG-{STATUS_PAGES.length.toString().padStart(4, "0")}</span>
+          <span className="sn-rec-number">
+            SPG-{STATUS_PAGES.length.toString().padStart(4, "0")}
+          </span>
           <Pill kind={activeIncidents.length === 0 ? "success" : "warning"}>
             {activeIncidents.length === 0
               ? "All systems operational"
@@ -86,8 +83,8 @@ export function StatusPagesScreen() {
         <div className="sn-form-title-meta">
           <h1>Status pages</h1>
           <div className="sn-form-sub">
-            {STATUS_PAGES.length} pages · {totalIncidents} historical incidents · auto-published from
-            internal incident records
+            {STATUS_PAGES.length} pages · {totalIncidents} historical incidents · auto-published
+            from internal incident records
           </div>
         </div>
         <div className="sn-form-actions">
@@ -105,12 +102,48 @@ export function StatusPagesScreen() {
 
       {/* KPI strip */}
       <div className="sn-kpi-strip">
-        <Kpi label="Pages" value={STATUS_PAGES.length} sub={`${STATUS_PAGES.filter((p) => p.visibility === "public").length} public · ${STATUS_PAGES.filter((p) => p.visibility === "private").length} private`} tone="neutral" />
-        <Kpi label="Components" value={components.length} sub={`across ${selectedPage.groups.length} groups`} tone="neutral" />
-        <Kpi label="Active incidents" value={activeIncidents.length} sub="on selected page" tone={activeIncidents.length ? "warn" : "ok"} />
-        <Kpi label="90-day uptime" value={`${(selectedPage.uptime90d * 100).toFixed(2)}%`} sub="avg across components" tone={selectedPage.uptime90d > 0.999 ? "ok" : selectedPage.uptime90d > 0.99 ? "warn" : "crit"} />
-        <Kpi label="Subscribers" value={(selectedPage.subscribers.email + selectedPage.subscribers.sms + selectedPage.subscribers.webhook).toLocaleString()} sub="email + sms + webhook" tone="neutral" />
-        <Kpi label="Historical" value={STATUS_INCIDENTS.length} sub="incidents all-time" tone="neutral" />
+        <Kpi
+          label="Pages"
+          value={STATUS_PAGES.length}
+          sub={`${STATUS_PAGES.filter((p) => p.visibility === "public").length} public · ${STATUS_PAGES.filter((p) => p.visibility === "private").length} private`}
+          tone="neutral"
+        />
+        <Kpi
+          label="Components"
+          value={components.length}
+          sub={`across ${selectedPage.groups.length} groups`}
+          tone="neutral"
+        />
+        <Kpi
+          label="Active incidents"
+          value={activeIncidents.length}
+          sub="on selected page"
+          tone={activeIncidents.length ? "warn" : "ok"}
+        />
+        <Kpi
+          label="90-day uptime"
+          value={`${(selectedPage.uptime90d * 100).toFixed(2)}%`}
+          sub="avg across components"
+          tone={
+            selectedPage.uptime90d > 0.999 ? "ok" : selectedPage.uptime90d > 0.99 ? "warn" : "crit"
+          }
+        />
+        <Kpi
+          label="Subscribers"
+          value={(
+            selectedPage.subscribers.email +
+            selectedPage.subscribers.sms +
+            selectedPage.subscribers.webhook
+          ).toLocaleString()}
+          sub="email + sms + webhook"
+          tone="neutral"
+        />
+        <Kpi
+          label="Historical"
+          value={STATUS_INCIDENTS.length}
+          sub="incidents all-time"
+          tone="neutral"
+        />
       </div>
 
       <div className="sn-form-layout">
@@ -172,7 +205,8 @@ export function StatusPagesScreen() {
               rel="noreferrer"
               style={{ marginLeft: "auto", fontSize: 12 }}
             >
-              View public page <i className="fa-solid fa-arrow-up-right-from-square" style={{ marginLeft: 4 }} />
+              View public page{" "}
+              <i className="fa-solid fa-arrow-up-right-from-square" style={{ marginLeft: 4 }} />
             </a>
           </div>
 
@@ -199,7 +233,9 @@ export function StatusPagesScreen() {
                     <ul className="sp-component-list">
                       {groupComponents.map((c) => (
                         <li key={c.id} className="sp-component-row">
-                          <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                          <div
+                            style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}
+                          >
                             <span
                               className="sp-status-dot"
                               style={{ background: STATUS_COLOR[c.status] }}
@@ -231,9 +267,7 @@ export function StatusPagesScreen() {
             <div className="sn-section-header">
               <i className="fa-solid fa-chevron-down" />
               <span className="sn-section-title">Incident history</span>
-              <span className="sn-section-badge">
-                {incidents.length} on this page
-              </span>
+              <span className="sn-section-badge">{incidents.length} on this page</span>
             </div>
             <div className="sn-section-content">
               {incidents.length === 0 ? (
@@ -248,7 +282,9 @@ export function StatusPagesScreen() {
                         <Pill kind={IMPACT_PILL[inc.impact]}>{inc.impact}</Pill>
                         <b>{inc.title}</b>
                         <span className="sp-incident-stage">{STAGE_LABEL[inc.stage]}</span>
-                        <span style={{ marginLeft: "auto", fontSize: 11, color: "var(--fg-subtle)" }}>
+                        <span
+                          style={{ marginLeft: "auto", fontSize: 11, color: "var(--fg-subtle)" }}
+                        >
                           {new Date(inc.startedAt).toLocaleString()}
                         </span>
                       </div>
@@ -282,11 +318,15 @@ export function StatusPagesScreen() {
                 </Pill>
               </Field>
               <Field label="Domain">
-                <span className="mono" style={{ fontSize: 11.5 }}>{selectedPage.domain}</span>
+                <span className="mono" style={{ fontSize: 11.5 }}>
+                  {selectedPage.domain}
+                </span>
               </Field>
               <Field label="Tenant">{selectedPage.tenant}</Field>
               <Field label="Slug">
-                <span className="mono" style={{ fontSize: 11.5 }}>{selectedPage.slug}</span>
+                <span className="mono" style={{ fontSize: 11.5 }}>
+                  {selectedPage.slug}
+                </span>
               </Field>
               <p style={{ fontSize: 12, color: "var(--fg-subtle)", margin: "8px 0 0" }}>
                 {selectedPage.description}
@@ -297,9 +337,7 @@ export function StatusPagesScreen() {
           <div className="sn-side-card">
             <div className="sn-side-head">Subscribers</div>
             <div className="sn-side-body">
-              <Field label="Email">
-                {selectedPage.subscribers.email.toLocaleString()}
-              </Field>
+              <Field label="Email">{selectedPage.subscribers.email.toLocaleString()}</Field>
               <Field label="SMS">{selectedPage.subscribers.sms.toLocaleString()}</Field>
               <Field label="Webhook">{selectedPage.subscribers.webhook}</Field>
               <Field label="RSS / Atom">{selectedPage.subscribers.rss}</Field>

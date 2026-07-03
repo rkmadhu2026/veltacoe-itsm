@@ -54,9 +54,13 @@ export function TopologyScreen() {
   return (
     <div className="page page-fade sn-dash">
       <div className="sn-breadcrumb">
-        <Link to="/dashboard" className="sn-link">Home</Link>
+        <Link to="/dashboard" className="sn-link">
+          Home
+        </Link>
         <span className="sn-bc-sep">›</span>
-        <Link to="/infra" className="sn-link">Infrastructure</Link>
+        <Link to="/infra" className="sn-link">
+          Infrastructure
+        </Link>
         <span className="sn-bc-sep">›</span>
         <span>Network topology</span>
       </div>
@@ -64,28 +68,45 @@ export function TopologyScreen() {
       <div className="sn-form-header">
         <div className="sn-form-title-row">
           <span className="sn-rec-number">TOPO-BLR</span>
-          <Pill kind="neutral" noDot>{nodes.length} nodes</Pill>
-          <Pill kind="neutral" noDot>{NET_LINKS.length} links</Pill>
+          <Pill kind="neutral" noDot>
+            {nodes.length} nodes
+          </Pill>
+          <Pill kind="neutral" noDot>
+            {NET_LINKS.length} links
+          </Pill>
           {selected && <Pill kind="warning">{blast.size - 1} downstream in blast radius</Pill>}
         </div>
         <div className="sn-form-title-meta">
           <h1>Network topology &amp; blast radius</h1>
           <div className="sn-form-sub">
-            Bangalore DC-1 core fabric · LLDP/CDP-derived · click a node to trace its downstream dependency chain
+            Bangalore DC-1 core fabric · LLDP/CDP-derived · click a node to trace its downstream
+            dependency chain
           </div>
         </div>
         <div className="sn-form-actions">
-          <button type="button" className="sn-btn" onClick={() => setSelected(null)} disabled={!selected}>
+          <button
+            type="button"
+            className="sn-btn"
+            onClick={() => setSelected(null)}
+            disabled={!selected}
+          >
             <i className="fa-solid fa-arrows-rotate" /> Clear selection
           </button>
-          <button type="button" className="sn-btn"><i className="fa-solid fa-download" /> Export SVG</button>
+          <button type="button" className="sn-btn">
+            <i className="fa-solid fa-download" /> Export SVG
+          </button>
         </div>
       </div>
 
       <div className="sn-form-layout">
         <div className="sn-form-main">
           <div className="topo-canvas">
-            <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} width="100%" role="img" aria-label="Network topology graph">
+            <svg
+              viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+              width="100%"
+              role="img"
+              aria-label="Network topology graph"
+            >
               {/* Edges */}
               {NET_LINKS.map(([a, b], i) => {
                 const na = nodeById.get(a);
@@ -95,7 +116,10 @@ export function TopologyScreen() {
                 return (
                   <line
                     key={i}
-                    x1={na.x} y1={na.y} x2={nb.x} y2={nb.y}
+                    x1={na.x}
+                    y1={na.y}
+                    x2={nb.x}
+                    y2={nb.y}
                     stroke={active ? "var(--accent)" : "var(--border, #e2e8f0)"}
                     strokeWidth={active ? 2 : 1}
                     opacity={active ? 0.8 : 0.3}
@@ -114,9 +138,21 @@ export function TopologyScreen() {
                     style={{ cursor: "pointer", opacity: inBlast ? 1 : 0.28 }}
                     onClick={() => setSelected(isSel ? null : n.id)}
                   >
-                    <circle r={isSel ? 20 : 16} fill="var(--bg,#fff)" stroke={STATUS_COLOR[n.device.status]} strokeWidth={isSel ? 4 : 3} />
+                    <circle
+                      r={isSel ? 20 : 16}
+                      fill="var(--bg,#fff)"
+                      stroke={STATUS_COLOR[n.device.status]}
+                      strokeWidth={isSel ? 4 : 3}
+                    />
                     <circle r={7} fill={kind?.color ?? "#64748b"} />
-                    <text y={isSel ? 36 : 32} textAnchor="middle" className="topo-label" fontSize={10}>{n.id.replace("-BLR", "")}</text>
+                    <text
+                      y={isSel ? 36 : 32}
+                      textAnchor="middle"
+                      className="topo-label"
+                      fontSize={10}
+                    >
+                      {n.id.replace("-BLR", "")}
+                    </text>
                   </g>
                 );
               })}
@@ -128,13 +164,17 @@ export function TopologyScreen() {
             <div className="topo-legend-group">
               <span className="topo-legend-title">Status</span>
               {(["ok", "warn", "critical", "down"] as DeviceStatus[]).map((s) => (
-                <span key={s} className="topo-legend-item"><span className="topo-ring" style={{ borderColor: STATUS_COLOR[s] }} /> {s}</span>
+                <span key={s} className="topo-legend-item">
+                  <span className="topo-ring" style={{ borderColor: STATUS_COLOR[s] }} /> {s}
+                </span>
               ))}
             </div>
             <div className="topo-legend-group">
               <span className="topo-legend-title">Type</span>
               {kindsInGraph.map((k) => (
-                <span key={k.id} className="topo-legend-item"><span className="topo-swatch" style={{ background: k.color }} /> {k.label}</span>
+                <span key={k.id} className="topo-legend-item">
+                  <span className="topo-swatch" style={{ background: k.color }} /> {k.label}
+                </span>
               ))}
             </div>
           </div>
@@ -147,34 +187,56 @@ export function TopologyScreen() {
                 <div className="sn-side-head">Selected node</div>
                 <div className="sn-side-body">
                   <div className="topo-sel-title mono">{selDevice.id}</div>
-                  <div className="text-mute" style={{ fontSize: 12, marginBottom: 8 }}>{selDevice.model}</div>
+                  <div className="text-mute" style={{ fontSize: 12, marginBottom: 8 }}>
+                    {selDevice.model}
+                  </div>
                   <MetaRow k="Role" v={selDevice.role} />
                   <MetaRow k="IP" v={selDevice.ip} mono />
                   <MetaRow k="Status" v={selDevice.status} />
                   <MetaRow k="CPU / Mem" v={`${selDevice.cpu}% / ${selDevice.mem}%`} />
-                  <Link to={`/infra/device/${selDevice.id}`} className="sn-btn primary" style={{ marginTop: 10, width: "100%", justifyContent: "center" }}>
+                  <Link
+                    to={`/infra/device/${selDevice.id}`}
+                    className="sn-btn primary"
+                    style={{ marginTop: 10, width: "100%", justifyContent: "center" }}
+                  >
                     <i className="fa-solid fa-up-right-from-square" /> Open Node 360
                   </Link>
                 </div>
               </div>
               <div className="sn-side-card">
-                <div className="sn-side-head">Blast radius <span className="sn-side-count">{blast.size - 1}</span></div>
+                <div className="sn-side-head">
+                  Blast radius <span className="sn-side-count">{blast.size - 1}</span>
+                </div>
                 <div className="sn-side-body">
                   {blast.size === 1 ? (
-                    <p style={{ fontSize: 12, color: "var(--fg-subtle)", margin: 0 }}>Leaf node — no downstream dependents.</p>
+                    <p style={{ fontSize: 12, color: "var(--fg-subtle)", margin: 0 }}>
+                      Leaf node — no downstream dependents.
+                    </p>
                   ) : (
-                    [...blast].filter((id) => id !== selected).map((id) => {
-                      const dev = deviceById(id);
-                      return (
-                        <Link key={id} to={`/infra/device/${id}`} className="sn-related-row" style={{ textDecoration: "none" }}>
-                          <div>
-                            <div className="sn-related-title mono" style={{ fontSize: 12 }}>{id}</div>
-                            <div className="sn-related-meta">{dev?.role}</div>
-                          </div>
-                          <span className="topo-ring" style={{ borderColor: STATUS_COLOR[dev?.status ?? "down"] }} />
-                        </Link>
-                      );
-                    })
+                    [...blast]
+                      .filter((id) => id !== selected)
+                      .map((id) => {
+                        const dev = deviceById(id);
+                        return (
+                          <Link
+                            key={id}
+                            to={`/infra/device/${id}`}
+                            className="sn-related-row"
+                            style={{ textDecoration: "none" }}
+                          >
+                            <div>
+                              <div className="sn-related-title mono" style={{ fontSize: 12 }}>
+                                {id}
+                              </div>
+                              <div className="sn-related-meta">{dev?.role}</div>
+                            </div>
+                            <span
+                              className="topo-ring"
+                              style={{ borderColor: STATUS_COLOR[dev?.status ?? "down"] }}
+                            />
+                          </Link>
+                        );
+                      })
                   )}
                 </div>
               </div>
@@ -184,10 +246,13 @@ export function TopologyScreen() {
               <div className="sn-side-head">Blast-radius analysis</div>
               <div className="sn-side-body">
                 <p style={{ fontSize: 12.5, color: "var(--fg-subtle)", margin: "0 0 10px" }}>
-                  Select any node to trace every downstream device that depends on it. Use this before a change window
-                  to understand impact, or during an incident to scope what a failure takes out.
+                  Select any node to trace every downstream device that depends on it. Use this
+                  before a change window to understand impact, or during an incident to scope what a
+                  failure takes out.
                 </p>
-                <div className="topo-hint"><i className="fa-solid fa-hand-pointer" /> Click a node in the graph</div>
+                <div className="topo-hint">
+                  <i className="fa-solid fa-hand-pointer" /> Click a node in the graph
+                </div>
               </div>
             </div>
           )}
@@ -215,7 +280,8 @@ function buildGraph() {
   const children = new Map<string, string[]>();
   const ids = new Set<string>();
   for (const [a, b] of NET_LINKS) {
-    ids.add(a); ids.add(b);
+    ids.add(a);
+    ids.add(b);
     if (!undirected.has(a)) undirected.set(a, new Set());
     if (!undirected.has(b)) undirected.set(b, new Set());
     undirected.get(a)!.add(b);
@@ -264,7 +330,27 @@ function buildGraph() {
 }
 
 function fallbackDevice(id: string): Device {
-  return DEVICES[0] ?? ({ id, kind: "switch", model: id, site: "", ip: "", os: "", uptime: "", cpu: 0, mem: 0, status: "down", role: "", iface: "", throughput: "", sessions: "", lastSeen: "", agent: "" } as Device);
+  return (
+    DEVICES[0] ??
+    ({
+      id,
+      kind: "switch",
+      model: id,
+      site: "",
+      ip: "",
+      os: "",
+      uptime: "",
+      cpu: 0,
+      mem: 0,
+      status: "down",
+      role: "",
+      iface: "",
+      throughput: "",
+      sessions: "",
+      lastSeen: "",
+      agent: "",
+    } as Device)
+  );
 }
 
 const STYLES = `

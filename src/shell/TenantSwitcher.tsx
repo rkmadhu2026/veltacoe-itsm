@@ -34,7 +34,12 @@ export function TenantSwitcher({ open, onClose }: TenantSwitcherProps) {
   const filtered = TENANTS.filter((t) => t.name.toLowerCase().includes(q.toLowerCase()));
   return (
     <div className="tsw-backdrop" onClick={onClose} role="presentation">
-      <div className="tsw" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Tenant switcher">
+      <div
+        className="tsw"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-label="Tenant switcher"
+      >
         <div className="tsw-head">
           <i className="fa-solid fa-magnifying-glass" />
           <input
@@ -55,7 +60,10 @@ export function TenantSwitcher({ open, onClose }: TenantSwitcherProps) {
               navigate("/cross-tenant");
             }}
           >
-            <div className="tsw-icon" style={{ background: "linear-gradient(135deg,#0f1c3f,#2563eb)" }}>
+            <div
+              className="tsw-icon"
+              style={{ background: "linear-gradient(135deg,#0f1c3f,#2563eb)" }}
+            >
               LF
             </div>
             <div className="tsw-info">

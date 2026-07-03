@@ -19,9 +19,9 @@ async function gotoLanding(page: Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
   // Hero heading is the readiness signal — React has mounted by the time
   // its text content is present.
-  await expect(
-    page.getByRole("heading", { name: /Incidents controlled/i }),
-  ).toBeVisible({ timeout: 30000 });
+  await expect(page.getByRole("heading", { name: /Incidents controlled/i })).toBeVisible({
+    timeout: 30000,
+  });
 }
 
 test.describe("landing", () => {
@@ -45,9 +45,7 @@ test.describe("landing", () => {
     await gotoLanding(page);
     await page.getByRole("link", { name: "Pricing" }).click();
     await expect(page).toHaveURL(/#pricing$/);
-    await expect(
-      page.getByRole("heading", { name: /simple plans that scale/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: /simple plans that scale/i })).toBeVisible();
   });
 });
 
@@ -56,7 +54,10 @@ test.describe("auth flow", () => {
     const errors = collectRuntimeErrors(page);
     await gotoLanding(page);
 
-    await page.locator(".lp-nav-cta").getByRole("button", { name: /sign in/i }).click();
+    await page
+      .locator(".lp-nav-cta")
+      .getByRole("button", { name: /sign in/i })
+      .click();
     await expect(page).toHaveURL(/\/login$/);
     await expect(page.getByRole("heading", { name: /great to see you/i })).toBeVisible();
 
@@ -70,7 +71,10 @@ test.describe("auth flow", () => {
 
   test("3-step signup wizard completes and lands on dashboard", async ({ page }) => {
     await gotoLanding(page);
-    await page.locator(".lp-nav-cta").getByRole("button", { name: /create workspace/i }).click();
+    await page
+      .locator(".lp-nav-cta")
+      .getByRole("button", { name: /create workspace/i })
+      .click();
     await expect(page).toHaveURL(/\/signup$/);
 
     await expect(page.getByRole("heading", { name: /create your account/i })).toBeVisible();
@@ -103,7 +107,10 @@ test.describe("authed shell", () => {
     // Authenticate via the auth flow rather than poking storage — keeps the
     // test close to the user's path while still being fast.
     await gotoLanding(page);
-    await page.locator(".lp-hero").getByRole("button", { name: /open platform/i }).click();
+    await page
+      .locator(".lp-hero")
+      .getByRole("button", { name: /open platform/i })
+      .click();
     await expect(page.locator(".sidebar")).toBeVisible();
   });
 
@@ -169,7 +176,10 @@ test.describe("responsive smoke", () => {
   test("dashboard renders on mobile viewport", async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 412, height: 915 });
     await gotoLanding(page);
-    await page.locator(".lp-hero").getByRole("button", { name: /open platform/i }).click();
+    await page
+      .locator(".lp-hero")
+      .getByRole("button", { name: /open platform/i })
+      .click();
     await expect(page.locator(".main")).not.toBeEmpty();
     await page.screenshot({ path: testInfo.outputPath("dashboard-mobile.png") });
   });

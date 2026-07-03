@@ -30,12 +30,42 @@ const SIGNAL_STEPS: ReadonlyArray<readonly [string, string, string]> = [
 ];
 
 const FEATURES: ReadonlyArray<{ ic: string; t: string; d: string; c: string }> = [
-  { ic: "fa-fire", t: "Incident response", d: "War-rooms auto-provisioned. AI suggests runbooks. PagerDuty + Slack + Zoom in one click.", c: "#dc2626" },
-  { ic: "fa-magnifying-glass-chart", t: "Problem management", d: "Recurring incidents auto-link to problem records. Five-whys generated from timelines.", c: "#f59e0b" },
-  { ic: "fa-code-branch", t: "Change management", d: "CAB workflows, risk scoring, impact graphs from CMDB. Roll back any deploy with one click.", c: "#2563eb" },
-  { ic: "fa-server", t: "On-prem infra", d: "Firewalls, switches, servers, VMs, exporters — discover, monitor, action — all from one pane.", c: "#475569" },
-  { ic: "fa-sitemap", t: "Service mapping", d: "Auto-built dependency graph. Blast-radius and root-cause traversal in milliseconds.", c: "#8b5cf6" },
-  { ic: "fa-bolt", t: "Flow Designer", d: "Drag-and-drop automation. Triggers, conditions, AI steps, runbook execution.", c: "#0891b2" },
+  {
+    ic: "fa-fire",
+    t: "Incident response",
+    d: "War-rooms auto-provisioned. AI suggests runbooks. PagerDuty + Slack + Zoom in one click.",
+    c: "#dc2626",
+  },
+  {
+    ic: "fa-magnifying-glass-chart",
+    t: "Problem management",
+    d: "Recurring incidents auto-link to problem records. Five-whys generated from timelines.",
+    c: "#f59e0b",
+  },
+  {
+    ic: "fa-code-branch",
+    t: "Change management",
+    d: "CAB workflows, risk scoring, impact graphs from CMDB. Roll back any deploy with one click.",
+    c: "#2563eb",
+  },
+  {
+    ic: "fa-server",
+    t: "On-prem infra",
+    d: "Firewalls, switches, servers, VMs, exporters — discover, monitor, action — all from one pane.",
+    c: "#475569",
+  },
+  {
+    ic: "fa-sitemap",
+    t: "Service mapping",
+    d: "Auto-built dependency graph. Blast-radius and root-cause traversal in milliseconds.",
+    c: "#8b5cf6",
+  },
+  {
+    ic: "fa-bolt",
+    t: "Flow Designer",
+    d: "Drag-and-drop automation. Triggers, conditions, AI steps, runbook execution.",
+    c: "#0891b2",
+  },
 ];
 
 const INTEGRATION_TILES: ReadonlyArray<readonly [string, string, string]> = [
@@ -60,23 +90,69 @@ const INTEGRATION_TILES: ReadonlyArray<readonly [string, string, string]> = [
 ];
 
 const PLANS = [
-  { name: "Starter",    price: "$0",      per: "5 seats",          features: ["3 integrations", "Basic alerting", "Slack notifications", "Community support"], cta: "Open platform",   primary: false },
-  { name: "Business",   price: "$12",     per: "per seat / month", features: ["Unlimited integrations", "AI correlation", "Custom runbooks", "SSO + audit logs", "Email + chat support"], cta: "Create workspace", primary: true, badge: "Most popular" },
-  { name: "Enterprise", price: "Custom",  per: "annual contract",  features: ["Multi-tenant + RBAC", "Dedicated CSM", "On-prem option", "FedRAMP / SOC2", "24/7 phone support"], cta: "Talk to sales", primary: false },
+  {
+    name: "Starter",
+    price: "$0",
+    per: "5 seats",
+    features: ["3 integrations", "Basic alerting", "Slack notifications", "Community support"],
+    cta: "Open platform",
+    primary: false,
+  },
+  {
+    name: "Business",
+    price: "$12",
+    per: "per seat / month",
+    features: [
+      "Unlimited integrations",
+      "AI correlation",
+      "Custom runbooks",
+      "SSO + audit logs",
+      "Email + chat support",
+    ],
+    cta: "Create workspace",
+    primary: true,
+    badge: "Most popular",
+  },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    per: "annual contract",
+    features: [
+      "Multi-tenant + RBAC",
+      "Dedicated CSM",
+      "On-prem option",
+      "FedRAMP / SOC2",
+      "24/7 phone support",
+    ],
+    cta: "Talk to sales",
+    primary: false,
+  },
 ] as const;
 
 const FAQS: ReadonlyArray<readonly [string, string]> = [
-  ["How fast can we connect data?", "Most teams connect alerting, logs, traces, cloud, and Slack in the first hour. VeltaCore ITSM starts correlating incidents as soon as events arrive."],
-  ["Can it replace our current ITSM?", "Yes. Incidents, problems, changes, services, CMDB, knowledge, SLAs, runbooks, roles, billing, and tenant controls are already routed in the product."],
-  ["Does AI take action by default?", "AI recommends root cause, owners, risk, and runbooks first. You decide which automation steps can execute automatically per service and tenant."],
-  ["Will it work for on-prem systems?", "Yes. The platform models datacenter racks, virtual machines, exporters, topology, networks, and hybrid cloud services in the same operational graph."],
+  [
+    "How fast can we connect data?",
+    "Most teams connect alerting, logs, traces, cloud, and Slack in the first hour. VeltaCore ITSM starts correlating incidents as soon as events arrive.",
+  ],
+  [
+    "Can it replace our current ITSM?",
+    "Yes. Incidents, problems, changes, services, CMDB, knowledge, SLAs, runbooks, roles, billing, and tenant controls are already routed in the product.",
+  ],
+  [
+    "Does AI take action by default?",
+    "AI recommends root cause, owners, risk, and runbooks first. You decide which automation steps can execute automatically per service and tenant.",
+  ],
+  [
+    "Will it work for on-prem systems?",
+    "Yes. The platform models datacenter racks, virtual machines, exporters, topology, networks, and hybrid cloud services in the same operational graph.",
+  ],
 ];
 
 const FOOTER_COLS: ReadonlyArray<readonly [string, readonly string[]]> = [
-  ["Product",   ["Incidents", "Problems", "Changes", "CMDB", "Service Catalog"]],
-  ["Platform",  ["Multi-tenant", "Integrations", "API", "Mobile", "Security"]],
+  ["Product", ["Incidents", "Problems", "Changes", "CMDB", "Service Catalog"]],
+  ["Platform", ["Multi-tenant", "Integrations", "API", "Mobile", "Security"]],
   ["Resources", ["Docs", "Status page", "Changelog", "Roadmap", "Community"]],
-  ["Company",   ["About", "Customers", "Careers", "Press", "Contact"]],
+  ["Company", ["About", "Customers", "Careers", "Press", "Contact"]],
 ];
 
 export function LandingScreen() {
@@ -132,7 +208,11 @@ export function LandingScreen() {
               high-pressure operations.
             </p>
             <div className="lp-hero-cta">
-              <button type="button" className="lp-btn primary lg" onClick={() => navigate("/signup")}>
+              <button
+                type="button"
+                className="lp-btn primary lg"
+                onClick={() => navigate("/signup")}
+              >
                 Create workspace <i className="fa-solid fa-arrow-right" />
               </button>
               <button type="button" className="lp-btn ghost lg" onClick={enter}>
@@ -140,25 +220,39 @@ export function LandingScreen() {
               </button>
             </div>
             <div className="lp-hero-meta">
-              <span><i className="fa-solid fa-check" /> No credit card required</span>
-              <span><i className="fa-solid fa-check" /> SOC 2 · GDPR · HIPAA</span>
-              <span><i className="fa-solid fa-check" /> 99.99% uptime SLA</span>
+              <span>
+                <i className="fa-solid fa-check" /> No credit card required
+              </span>
+              <span>
+                <i className="fa-solid fa-check" /> SOC 2 · GDPR · HIPAA
+              </span>
+              <span>
+                <i className="fa-solid fa-check" /> 99.99% uptime SLA
+              </span>
             </div>
           </div>
           <div className="lp-hero-right">
             <div className="lp-mockup">
               <div className="lp-mockup-head">
-                <span className="lp-traffic"><i /><i /><i /></span>
+                <span className="lp-traffic">
+                  <i />
+                  <i />
+                  <i />
+                </span>
                 <span className="lp-mockup-url">veltacore-itsm.io/incidents</span>
               </div>
               <div className="lp-mockup-body">
                 <div className="lp-command-surface">
-                  <div className="lp-command-orb"><span>AI</span></div>
+                  <div className="lp-command-orb">
+                    <span>AI</span>
+                  </div>
                   <div className="lp-command-copy">
                     <b>Autonomous RCA running</b>
                     <span>6 signals fused · rollback confidence 87%</span>
                   </div>
-                  <button type="button" onClick={enter}>Open</button>
+                  <button type="button" onClick={enter}>
+                    Open
+                  </button>
                 </div>
                 <div className="lp-mock-pill">
                   <span className="lp-pulse" /> 1 active Sev 1 — Stripe pool
@@ -196,11 +290,7 @@ export function LandingScreen() {
                 </div>
                 <div className="lp-command-map">
                   {(["Alert", "Trace", "Change", "CMDB", "Runbook"] as const).map((label, i) => (
-                    <div
-                      key={label}
-                      className="lp-command-node"
-                      style={{ ["--i" as never]: i }}
-                    >
+                    <div key={label} className="lp-command-node" style={{ ["--i" as never]: i }}>
                       <i
                         className={`fa-solid ${
                           ["fa-bell", "fa-route", "fa-code-branch", "fa-sitemap", "fa-play"][i]
@@ -219,7 +309,9 @@ export function LandingScreen() {
           <div>Trusted by ops teams at</div>
           <div className="lp-logo-row">
             {TRUST_LOGOS.map((l) => (
-              <span key={l} className="lp-logo-word">{l}</span>
+              <span key={l} className="lp-logo-word">
+                {l}
+              </span>
             ))}
           </div>
         </div>
@@ -327,10 +419,22 @@ export function LandingScreen() {
             </div>
           </div>
           <div className="lp-customer-proof">
-            <div><b>9m</b><span>Sev-1 MTTR</span></div>
-            <div><b>31k</b><span>alerts deduped</span></div>
-            <div><b>184</b><span>runbooks automated</span></div>
-            <div><b>6</b><span>business units live</span></div>
+            <div>
+              <b>9m</b>
+              <span>Sev-1 MTTR</span>
+            </div>
+            <div>
+              <b>31k</b>
+              <span>alerts deduped</span>
+            </div>
+            <div>
+              <b>184</b>
+              <span>runbooks automated</span>
+            </div>
+            <div>
+              <b>6</b>
+              <span>business units live</span>
+            </div>
           </div>
         </div>
       </section>
@@ -377,7 +481,9 @@ export function LandingScreen() {
           <h2>
             Built for real incident pressure across infrastructure, network, and application teams.
           </h2>
-          <p className="lp-section-sub">A few operator answers before your first workspace goes live.</p>
+          <p className="lp-section-sub">
+            A few operator answers before your first workspace goes live.
+          </p>
         </div>
         <div className="lp-faq-grid">
           {FAQS.map(([q, a]) => (

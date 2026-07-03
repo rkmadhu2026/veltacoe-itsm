@@ -50,18 +50,12 @@ export function Sidebar({ onOpenSwitcher }: SidebarProps) {
                   ? location.pathname.startsWith(i.matchPrefix)
                   : location.pathname === i.to;
                 return (
-                  <NavLink
-                    key={i.id}
-                    to={i.to}
-                    className={`sb-item${active ? " active" : ""}`}
-                  >
+                  <NavLink key={i.id} to={i.to} className={`sb-item${active ? " active" : ""}`}>
                     <span className="sb-icon">
                       <i className={`fa-solid ${i.icon}`} />
                     </span>
                     <span className="sb-label">{i.label}</span>
-                    {i.badge && (
-                      <span className={`sb-badge ${i.badge.kind}`}>{i.badge.n}</span>
-                    )}
+                    {i.badge && <span className={`sb-badge ${i.badge.kind}`}>{i.badge.n}</span>}
                     {!i.badge && i.kbd && <kbd>{i.kbd}</kbd>}
                   </NavLink>
                 );

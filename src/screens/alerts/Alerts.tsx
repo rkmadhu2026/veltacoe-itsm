@@ -80,7 +80,12 @@ export function AlertsScreen() {
     return ALERT_INSTANCES.filter((a) => {
       if (sevFilter !== "all" && a.severity !== sevFilter) return false;
       if (stateFilter !== "all" && a.state !== stateFilter) return false;
-      if (q && !`${a.alertname} ${a.instance} ${a.service} ${a.summary}`.toLowerCase().includes(q.toLowerCase()))
+      if (
+        q &&
+        !`${a.alertname} ${a.instance} ${a.service} ${a.summary}`
+          .toLowerCase()
+          .includes(q.toLowerCase())
+      )
         return false;
       return true;
     });
@@ -89,7 +94,9 @@ export function AlertsScreen() {
   return (
     <div className="page page-fade sn-dash">
       <div className="sn-breadcrumb">
-        <Link to="/dashboard" className="sn-link">Home</Link>
+        <Link to="/dashboard" className="sn-link">
+          Home
+        </Link>
         <span className="sn-bc-sep">›</span>
         <a className="sn-link">Observe</a>
         <span className="sn-bc-sep">›</span>
@@ -101,13 +108,17 @@ export function AlertsScreen() {
           <span className="sn-rec-number">ALRT-MGR</span>
           {counts.critical > 0 && <Pill kind="critical">{counts.critical} critical firing</Pill>}
           {counts.inhibited > 0 && <Pill kind="purple">{counts.inhibited} inhibited</Pill>}
-          {counts.silenced > 0 && <Pill kind="neutral" noDot>{counts.silenced} silenced</Pill>}
+          {counts.silenced > 0 && (
+            <Pill kind="neutral" noDot>
+              {counts.silenced} silenced
+            </Pill>
+          )}
         </div>
         <div className="sn-form-title-meta">
           <h1>Alertmanager</h1>
           <div className="sn-form-sub">
-            {ALERT_RULES.length} rules · {groups.length} active groups · grouping, dedup, inhibition &amp;
-            routing across {TENANTS.length} tenants
+            {ALERT_RULES.length} rules · {groups.length} active groups · grouping, dedup, inhibition
+            &amp; routing across {TENANTS.length} tenants
           </div>
         </div>
         <div className="sn-form-actions">
@@ -129,7 +140,12 @@ export function AlertsScreen() {
         <Kpi label="Pending" value={counts.pending} sub="in `for` window" tone="warn" />
         <Kpi label="Silenced" value={counts.silenced} sub="muted" tone="neutral" />
         <Kpi label="Inhibited" value={counts.inhibited} sub="suppressed" tone="neutral" />
-        <Kpi label="Receivers" value={ALERT_RECEIVERS.filter((r) => r.enabled).length} sub="enabled" tone="ok" />
+        <Kpi
+          label="Receivers"
+          value={ALERT_RECEIVERS.filter((r) => r.enabled).length}
+          sub="enabled"
+          tone="ok"
+        />
       </div>
 
       <SeverityHeatmap />
@@ -158,7 +174,12 @@ export function AlertsScreen() {
                 onChange={(e) => setQ(e.target.value)}
               />
               {q && (
-                <button type="button" className="inc-toolbar-clear" onClick={() => setQ("")} aria-label="Clear">
+                <button
+                  type="button"
+                  className="inc-toolbar-clear"
+                  onClick={() => setQ("")}
+                  aria-label="Clear"
+                >
                   <i className="fa-solid fa-xmark" />
                 </button>
               )}
@@ -167,7 +188,12 @@ export function AlertsScreen() {
               <label>Severity</label>
               <div className="inc-segmented">
                 {(["all", "critical", "warning", "info"] as const).map((s) => (
-                  <button type="button" key={s} className={`inc-seg${sevFilter === s ? " active" : ""}`} onClick={() => setSevFilter(s)}>
+                  <button
+                    type="button"
+                    key={s}
+                    className={`inc-seg${sevFilter === s ? " active" : ""}`}
+                    onClick={() => setSevFilter(s)}
+                  >
                     {s === "all" ? "All" : s}
                   </button>
                 ))}
@@ -176,11 +202,18 @@ export function AlertsScreen() {
             <div className="inc-toolbar-group">
               <label>State</label>
               <div className="inc-segmented">
-                {(["all", "firing", "pending", "silenced", "inhibited", "resolved"] as const).map((s) => (
-                  <button type="button" key={s} className={`inc-seg${stateFilter === s ? " active" : ""}`} onClick={() => setStateFilter(s)}>
-                    {s === "all" ? "All" : s}
-                  </button>
-                ))}
+                {(["all", "firing", "pending", "silenced", "inhibited", "resolved"] as const).map(
+                  (s) => (
+                    <button
+                      type="button"
+                      key={s}
+                      className={`inc-seg${stateFilter === s ? " active" : ""}`}
+                      onClick={() => setStateFilter(s)}
+                    >
+                      {s === "all" ? "All" : s}
+                    </button>
+                  ),
+                )}
               </div>
             </div>
           </div>
@@ -207,7 +240,10 @@ export function AlertsScreen() {
                   ))}
                   {filtered.length === 0 && (
                     <tr>
-                      <td colSpan={9} style={{ padding: 32, textAlign: "center", color: "var(--fg-subtle)" }}>
+                      <td
+                        colSpan={9}
+                        style={{ padding: 32, textAlign: "center", color: "var(--fg-subtle)" }}
+                      >
                         No alerts match the current filters.
                       </td>
                     </tr>
@@ -255,8 +291,16 @@ function AlertRow({ a }: { a: AlertInstance }) {
         )}
       </td>
       <td className="mono">
-        {a.instance.startsWith("SW-") || a.instance.startsWith("FW-") || a.instance.startsWith("LNX-") || a.instance.startsWith("WIN-") || a.instance.startsWith("ESX-") || a.instance.startsWith("UPS-") || a.instance.startsWith("EXP-") ? (
-          <Link to={`/infra/device/${a.instance}`} className="sn-link mono">{a.instance}</Link>
+        {a.instance.startsWith("SW-") ||
+        a.instance.startsWith("FW-") ||
+        a.instance.startsWith("LNX-") ||
+        a.instance.startsWith("WIN-") ||
+        a.instance.startsWith("ESX-") ||
+        a.instance.startsWith("UPS-") ||
+        a.instance.startsWith("EXP-") ? (
+          <Link to={`/infra/device/${a.instance}`} className="sn-link mono">
+            {a.instance}
+          </Link>
         ) : (
           a.instance
         )}
@@ -266,7 +310,8 @@ function AlertRow({ a }: { a: AlertInstance }) {
       <td>
         {receiver && (
           <span className="am-receiver-chip">
-            <i className={`fa-solid ${RECEIVER_ICON[receiver.kind]}`} /> {receiver.name.split(" · ")[0]}
+            <i className={`fa-solid ${RECEIVER_ICON[receiver.kind]}`} />{" "}
+            {receiver.name.split(" · ")[0]}
           </span>
         )}
       </td>
@@ -298,7 +343,10 @@ function SeverityHeatmap() {
           <div className="am-heatmap-row am-heatmap-head">
             <div className="am-heatmap-label" />
             {Array.from({ length: BUCKETS }, (_, i) => (
-              <div key={i} className="am-heatmap-time">{`${(24 - (BUCKETS - i) * 2).toString().padStart(2, "0")}h`}</div>
+              <div
+                key={i}
+                className="am-heatmap-time"
+              >{`${(24 - (BUCKETS - i) * 2).toString().padStart(2, "0")}h`}</div>
             ))}
           </div>
           {sites.map((site, r) => (
@@ -316,7 +364,9 @@ function SeverityHeatmap() {
                     key={c}
                     className="am-heatmap-cell"
                     title={`${site} · ${n} alerts`}
-                    style={{ background: n === 0 ? "var(--bg-muted)" : `rgba(220,38,38,${0.12 + v * 0.7})` }}
+                    style={{
+                      background: n === 0 ? "var(--bg-muted)" : `rgba(220,38,38,${0.12 + v * 0.7})`,
+                    }}
                   >
                     {n > 0 ? n : ""}
                   </div>
@@ -328,7 +378,11 @@ function SeverityHeatmap() {
         <div className="am-heatmap-legend">
           <span>Less</span>
           {[0.15, 0.35, 0.55, 0.75, 0.95].map((o) => (
-            <span key={o} className="am-heatmap-swatch" style={{ background: `rgba(220,38,38,${o})` }} />
+            <span
+              key={o}
+              className="am-heatmap-swatch"
+              style={{ background: `rgba(220,38,38,${o})` }}
+            />
           ))}
           <span>More</span>
         </div>
@@ -346,7 +400,9 @@ function GroupingView() {
       <div className="sn-section-header">
         <i className="fa-solid fa-object-group" />
         <span className="sn-section-title">Alert groups</span>
-        <span className="sn-section-badge">{groups.length} groups · grouped by alertname · tenant · site</span>
+        <span className="sn-section-badge">
+          {groups.length} groups · grouped by alertname · tenant · site
+        </span>
       </div>
       <div className="sn-section-content am-groups">
         {groups.map((g) => {
@@ -357,25 +413,38 @@ function GroupingView() {
           return (
             <div key={g.key} className="am-group">
               <div className="am-group-head">
-                <Pill kind={SEV_PILL[g.labels.severity as AlertLabelSeverity]}>{g.labels.severity}</Pill>
+                <Pill kind={SEV_PILL[g.labels.severity as AlertLabelSeverity]}>
+                  {g.labels.severity}
+                </Pill>
                 <b>{g.labels.alertname}</b>
-                <span className="mono text-mute">{tenantName(g.labels.tenant)} · {g.labels.site}</span>
+                <span className="mono text-mute">
+                  {tenantName(g.labels.tenant)} · {g.labels.site}
+                </span>
                 <span className="am-group-count">{members.length}</span>
                 {receiver && (
                   <span className="am-receiver-chip" style={{ marginLeft: "auto" }}>
-                    <i className={`fa-solid ${RECEIVER_ICON[receiver.kind]}`} /> {receiver.name.split(" · ")[0]}
+                    <i className={`fa-solid ${RECEIVER_ICON[receiver.kind]}`} />{" "}
+                    {receiver.name.split(" · ")[0]}
                   </span>
                 )}
               </div>
               <div className="am-group-members">
                 {members.map((a) => (
                   <div key={a.id} className="am-group-member">
-                    <span className={`sn-state-pill state-${a.state === "firing" ? "active" : "resolved"}`}>
+                    <span
+                      className={`sn-state-pill state-${a.state === "firing" ? "active" : "resolved"}`}
+                    >
                       <i className={`fa-solid ${STATE_META[a.state].icon}`} /> {a.state}
                     </span>
-                    <Link to={`/infra/device/${a.instance}`} className="sn-link mono">{a.instance}</Link>
-                    <span className="text-mute" style={{ fontSize: 11.5 }}>{a.summary}</span>
-                    <span className="mono text-mute" style={{ marginLeft: "auto" }}>{a.value}</span>
+                    <Link to={`/infra/device/${a.instance}`} className="sn-link mono">
+                      {a.instance}
+                    </Link>
+                    <span className="text-mute" style={{ fontSize: 11.5 }}>
+                      {a.summary}
+                    </span>
+                    <span className="mono text-mute" style={{ marginLeft: "auto" }}>
+                      {a.value}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -406,17 +475,26 @@ function RoutingView() {
       </div>
       <aside className="sn-form-side">
         <div className="sn-side-card">
-          <div className="sn-side-head">Inhibition rules <span className="sn-side-count">{INHIBITION_RULES.length}</span></div>
+          <div className="sn-side-head">
+            Inhibition rules <span className="sn-side-count">{INHIBITION_RULES.length}</span>
+          </div>
           <div className="sn-side-body">
             {INHIBITION_RULES.map((r) => (
               <div key={r.id} className="am-inhibit">
                 <div className="mono" style={{ fontSize: 11 }}>
                   <span className="am-inhibit-src">{r.sourceMatch}</span>
-                  <i className="fa-solid fa-arrow-down-long" style={{ margin: "0 6px", color: "var(--fg-subtle)" }} />
+                  <i
+                    className="fa-solid fa-arrow-down-long"
+                    style={{ margin: "0 6px", color: "var(--fg-subtle)" }}
+                  />
                   <span className="am-inhibit-tgt">{r.targetMatch}</span>
                 </div>
-                <div style={{ fontSize: 11, color: "var(--fg-subtle)", marginTop: 4 }}>{r.description}</div>
-                <div style={{ fontSize: 10.5, color: "var(--fg-subtle)", marginTop: 2 }}>equal: [{r.equal.join(", ")}]</div>
+                <div style={{ fontSize: 11, color: "var(--fg-subtle)", marginTop: 4 }}>
+                  {r.description}
+                </div>
+                <div style={{ fontSize: 10.5, color: "var(--fg-subtle)", marginTop: 2 }}>
+                  equal: [{r.equal.join(", ")}]
+                </div>
               </div>
             ))}
           </div>
@@ -426,7 +504,15 @@ function RoutingView() {
   );
 }
 
-function RouteNode({ route, depth, isRoot }: { route: AlertRoute; depth: number; isRoot?: boolean }) {
+function RouteNode({
+  route,
+  depth,
+  isRoot,
+}: {
+  route: AlertRoute;
+  depth: number;
+  isRoot?: boolean;
+}) {
   const receiver = receiverById(route.receiver);
   const matchers = Object.entries(route.match);
   return (
@@ -435,7 +521,9 @@ function RouteNode({ route, depth, isRoot }: { route: AlertRoute; depth: number;
         {isRoot ? (
           <span className="am-route-badge root">root</span>
         ) : (
-          <span className="am-route-badge">{matchers.map(([k, v]) => `${k}=${v}`).join(" ") || "catch-all"}</span>
+          <span className="am-route-badge">
+            {matchers.map(([k, v]) => `${k}=${v}`).join(" ") || "catch-all"}
+          </span>
         )}
         {receiver && (
           <span className="am-receiver-chip">
@@ -445,7 +533,8 @@ function RouteNode({ route, depth, isRoot }: { route: AlertRoute; depth: number;
         {route.cont && <span className="am-route-cont">continue</span>}
       </div>
       <div className="am-route-meta mono">
-        group_by=[{route.groupBy.join(", ")}] · wait={route.groupWait} · interval={route.groupInterval} · repeat={route.repeatInterval}
+        group_by=[{route.groupBy.join(", ")}] · wait={route.groupWait} · interval=
+        {route.groupInterval} · repeat={route.repeatInterval}
       </div>
       {route.children?.map((c) => (
         <RouteNode key={c.id} route={c} depth={depth + 1} />
@@ -457,8 +546,16 @@ function RouteNode({ route, depth, isRoot }: { route: AlertRoute; depth: number;
 // ── Silences & maintenance ───────────────────────────────────────────────────
 
 function SilencesView() {
-  const silencePill: Record<string, PillKind> = { active: "success", pending: "warning", expired: "neutral" };
-  const mwPill: Record<string, PillKind> = { active: "success", scheduled: "info", ended: "neutral" };
+  const silencePill: Record<string, PillKind> = {
+    active: "success",
+    pending: "warning",
+    expired: "neutral",
+  };
+  const mwPill: Record<string, PillKind> = {
+    active: "success",
+    scheduled: "info",
+    ended: "neutral",
+  };
   return (
     <div className="sn-form-layout">
       <div className="sn-form-main">
@@ -473,14 +570,18 @@ function SilencesView() {
               <div key={s.id} className="am-silence">
                 <div className="am-silence-top">
                   <Pill kind={silencePill[s.status]}>{s.status}</Pill>
-                  <span className="mono text-mute" style={{ fontSize: 11 }}>{s.id}</span>
+                  <span className="mono text-mute" style={{ fontSize: 11 }}>
+                    {s.id}
+                  </span>
                   <span style={{ marginLeft: "auto", fontSize: 11, color: "var(--fg-subtle)" }}>
                     {s.affected} muted · {s.startsAt} → {s.endsAt}
                   </span>
                 </div>
                 <div className="am-silence-matchers">
                   {s.matchers.map((m) => (
-                    <span key={m} className="am-matcher mono">{m}</span>
+                    <span key={m} className="am-matcher mono">
+                      {m}
+                    </span>
                   ))}
                 </div>
                 <div style={{ fontSize: 12 }}>{s.comment}</div>
@@ -494,16 +595,26 @@ function SilencesView() {
       </div>
       <aside className="sn-form-side">
         <div className="sn-side-card">
-          <div className="sn-side-head">Maintenance windows <span className="sn-side-count">{MAINTENANCE_WINDOWS.length}</span></div>
+          <div className="sn-side-head">
+            Maintenance windows <span className="sn-side-count">{MAINTENANCE_WINDOWS.length}</span>
+          </div>
           <div className="sn-side-body">
             {MAINTENANCE_WINDOWS.map((w) => (
-              <div key={w.id} className="sn-related-row" style={{ flexDirection: "column", alignItems: "flex-start", gap: 4 }}>
+              <div
+                key={w.id}
+                className="sn-related-row"
+                style={{ flexDirection: "column", alignItems: "flex-start", gap: 4 }}
+              >
                 <div style={{ display: "flex", gap: 8, alignItems: "center", width: "100%" }}>
                   <Pill kind={mwPill[w.status]}>{w.status}</Pill>
                   <span style={{ fontSize: 12, fontWeight: 550 }}>{w.name}</span>
                 </div>
-                <div className="mono" style={{ fontSize: 11, color: "var(--fg-subtle)" }}>{w.scope}</div>
-                <div style={{ fontSize: 11, color: "var(--fg-subtle)" }}>{w.startsAt} → {w.endsAt}</div>
+                <div className="mono" style={{ fontSize: 11, color: "var(--fg-subtle)" }}>
+                  {w.scope}
+                </div>
+                <div style={{ fontSize: 11, color: "var(--fg-subtle)" }}>
+                  {w.startsAt} → {w.endsAt}
+                </div>
               </div>
             ))}
           </div>
@@ -538,19 +649,31 @@ function ReceiversView() {
           <tbody>
             {ALERT_RECEIVERS.map((r) => (
               <tr key={r.id}>
-                <td><i className={`fa-solid ${RECEIVER_ICON[r.kind]}`} style={{ color: "var(--accent)" }} /></td>
+                <td>
+                  <i
+                    className={`fa-solid ${RECEIVER_ICON[r.kind]}`}
+                    style={{ color: "var(--accent)" }}
+                  />
+                </td>
                 <td style={{ fontWeight: 550 }}>{r.name}</td>
                 <td className="mono">{r.kind}</td>
                 <td className="mono text-mute">{r.target}</td>
                 <td>
                   {r.vaultRef ? (
-                    <span className="am-matcher mono"><i className="fa-solid fa-lock" style={{ marginRight: 4 }} />{r.vaultRef}</span>
+                    <span className="am-matcher mono">
+                      <i className="fa-solid fa-lock" style={{ marginRight: 4 }} />
+                      {r.vaultRef}
+                    </span>
                   ) : (
-                    <span className="text-mute" style={{ fontSize: 11, fontStyle: "italic" }}>none</span>
+                    <span className="text-mute" style={{ fontSize: 11, fontStyle: "italic" }}>
+                      none
+                    </span>
                   )}
                 </td>
                 <td>
-                  <Pill kind={r.enabled ? "success" : "neutral"}>{r.enabled ? "enabled" : "disabled"}</Pill>
+                  <Pill kind={r.enabled ? "success" : "neutral"}>
+                    {r.enabled ? "enabled" : "disabled"}
+                  </Pill>
                 </td>
               </tr>
             ))}
@@ -563,7 +686,17 @@ function ReceiversView() {
 
 // ── shared bits ──────────────────────────────────────────────────────────────
 
-function Kpi({ label, value, sub, tone }: { label: string; value: number | string; sub: string; tone: "ok" | "warn" | "crit" | "neutral" }) {
+function Kpi({
+  label,
+  value,
+  sub,
+  tone,
+}: {
+  label: string;
+  value: number | string;
+  sub: string;
+  tone: "ok" | "warn" | "crit" | "neutral";
+}) {
   return (
     <div className={`sn-kpi tone-${tone}`}>
       <div className="sn-kpi-l">{label}</div>

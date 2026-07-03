@@ -19,7 +19,9 @@ export function NocOverviewScreen() {
   const stats = useMemo(() => {
     const total = Object.values(DEVICE_COUNTS).reduce((a, b) => a + b, 0);
     const firing = ALERT_INSTANCES.filter((a) => a.state === "firing").length;
-    const critical = ALERT_INSTANCES.filter((a) => a.state === "firing" && a.severity === "critical").length;
+    const critical = ALERT_INSTANCES.filter(
+      (a) => a.state === "firing" && a.severity === "critical",
+    ).length;
     const exportersOk = EXPORTERS.filter((e) => e.status === "ok").length;
     const down = DEVICES.filter((d) => d.status === "down").length;
     const avgHealth = Math.round(SITES.reduce((a, s) => a + s.health, 0) / SITES.length);
@@ -28,14 +30,20 @@ export function NocOverviewScreen() {
 
   const feed = useMemo(() => [...INFRA_ALERTS].slice(0, 8), []);
   const capacityRows = useMemo(
-    () => [...DEVICES].filter((d) => d.cpu > 0).sort((a, b) => b.cpu + b.mem - (a.cpu + a.mem)).slice(0, 8),
+    () =>
+      [...DEVICES]
+        .filter((d) => d.cpu > 0)
+        .sort((a, b) => b.cpu + b.mem - (a.cpu + a.mem))
+        .slice(0, 8),
     [],
   );
 
   return (
     <div className="page page-fade sn-dash">
       <div className="sn-breadcrumb">
-        <Link to="/dashboard" className="sn-link">Home</Link>
+        <Link to="/dashboard" className="sn-link">
+          Home
+        </Link>
         <span className="sn-bc-sep">›</span>
         <span>Infrastructure</span>
       </div>
@@ -50,29 +58,63 @@ export function NocOverviewScreen() {
         <div className="sn-form-title-meta">
           <h1>NOC command center</h1>
           <div className="sn-form-sub">
-            {stats.total.toLocaleString()} monitored assets across {SITES.length} sites · live health, alert feed,
-            capacity &amp; daily-health heatmaps
+            {stats.total.toLocaleString()} monitored assets across {SITES.length} sites · live
+            health, alert feed, capacity &amp; daily-health heatmaps
           </div>
         </div>
         <div className="sn-form-actions">
-          <Link to="/infra/topology" className="sn-btn"><i className="fa-solid fa-circle-nodes" /> Topology</Link>
-          <Link to="/infra/assets" className="sn-btn"><i className="fa-solid fa-boxes-stacked" /> Inventory</Link>
-          <Link to="/alerts" className="sn-btn primary"><i className="fa-solid fa-bell" /> Alerts</Link>
+          <Link to="/infra/topology" className="sn-btn">
+            <i className="fa-solid fa-circle-nodes" /> Topology
+          </Link>
+          <Link to="/infra/assets" className="sn-btn">
+            <i className="fa-solid fa-boxes-stacked" /> Inventory
+          </Link>
+          <Link to="/alerts" className="sn-btn primary">
+            <i className="fa-solid fa-bell" /> Alerts
+          </Link>
         </div>
       </div>
 
       <div className="sn-kpi-strip">
-        <div className="sn-kpi tone-neutral"><div className="sn-kpi-l">Assets</div><div className="sn-kpi-v">{stats.total.toLocaleString()}</div><div className="sn-kpi-s">monitored</div></div>
-        <div className="sn-kpi tone-crit"><div className="sn-kpi-l">Firing alerts</div><div className="sn-kpi-v">{stats.firing}</div><div className="sn-kpi-s">{stats.critical} critical</div></div>
-        <div className="sn-kpi tone-crit"><div className="sn-kpi-l">Down</div><div className="sn-kpi-v">{stats.down}</div><div className="sn-kpi-s">unreachable</div></div>
-        <div className="sn-kpi tone-ok"><div className="sn-kpi-l">Exporters</div><div className="sn-kpi-v">{stats.exportersOk}/{EXPORTERS.length}</div><div className="sn-kpi-s">healthy</div></div>
-        <div className="sn-kpi tone-ok"><div className="sn-kpi-l">Avg health</div><div className="sn-kpi-v">{stats.avgHealth}%</div><div className="sn-kpi-s">all sites</div></div>
-        <div className="sn-kpi tone-neutral"><div className="sn-kpi-l">Sites</div><div className="sn-kpi-v">{SITES.length}</div><div className="sn-kpi-s">DC + branch</div></div>
+        <div className="sn-kpi tone-neutral">
+          <div className="sn-kpi-l">Assets</div>
+          <div className="sn-kpi-v">{stats.total.toLocaleString()}</div>
+          <div className="sn-kpi-s">monitored</div>
+        </div>
+        <div className="sn-kpi tone-crit">
+          <div className="sn-kpi-l">Firing alerts</div>
+          <div className="sn-kpi-v">{stats.firing}</div>
+          <div className="sn-kpi-s">{stats.critical} critical</div>
+        </div>
+        <div className="sn-kpi tone-crit">
+          <div className="sn-kpi-l">Down</div>
+          <div className="sn-kpi-v">{stats.down}</div>
+          <div className="sn-kpi-s">unreachable</div>
+        </div>
+        <div className="sn-kpi tone-ok">
+          <div className="sn-kpi-l">Exporters</div>
+          <div className="sn-kpi-v">
+            {stats.exportersOk}/{EXPORTERS.length}
+          </div>
+          <div className="sn-kpi-s">healthy</div>
+        </div>
+        <div className="sn-kpi tone-ok">
+          <div className="sn-kpi-l">Avg health</div>
+          <div className="sn-kpi-v">{stats.avgHealth}%</div>
+          <div className="sn-kpi-s">all sites</div>
+        </div>
+        <div className="sn-kpi tone-neutral">
+          <div className="sn-kpi-l">Sites</div>
+          <div className="sn-kpi-v">{SITES.length}</div>
+          <div className="sn-kpi-s">DC + branch</div>
+        </div>
       </div>
 
       {/* Site health tiles */}
       <div className="noc-sites">
-        {SITES.map((s) => <SiteTile key={s.id} site={s} />)}
+        {SITES.map((s) => (
+          <SiteTile key={s.id} site={s} />
+        ))}
       </div>
 
       <div className="sn-form-layout">
@@ -88,7 +130,11 @@ export function NocOverviewScreen() {
               <div className="noc-cap">
                 <div className="noc-cap-row noc-cap-head">
                   <div className="noc-cap-label" />
-                  {["CPU", "Mem", "Disk", "Net"].map((c) => <div key={c} className="noc-cap-col">{c}</div>)}
+                  {["CPU", "Mem", "Disk", "Net"].map((c) => (
+                    <div key={c} className="noc-cap-col">
+                      {c}
+                    </div>
+                  ))}
                 </div>
                 {capacityRows.map((d) => {
                   const seed = seedOf(d.id);
@@ -99,7 +145,14 @@ export function NocOverviewScreen() {
                     <Link key={d.id} to={`/infra/device/${d.id}`} className="noc-cap-row">
                       <div className="noc-cap-label mono">{d.id.replace("-BLR", "")}</div>
                       {cells.map((v, i) => (
-                        <div key={i} className="noc-cap-cell" style={{ background: satColor(v) }} title={`${v}%`}>{v}</div>
+                        <div
+                          key={i}
+                          className="noc-cap-cell"
+                          style={{ background: satColor(v) }}
+                          title={`${v}%`}
+                        >
+                          {v}
+                        </div>
                       ))}
                     </Link>
                   );
@@ -123,14 +176,22 @@ export function NocOverviewScreen() {
                     <div className="noc-cal-cells">
                       {Array.from({ length: 14 }, (_, c) => {
                         const v = healthScore(r, c, s.health);
-                        return <div key={c} className="noc-cal-cell" style={{ background: healthColor(v) }} title={`${v}%`} />;
+                        return (
+                          <div
+                            key={c}
+                            className="noc-cal-cell"
+                            style={{ background: healthColor(v) }}
+                            title={`${v}%`}
+                          />
+                        );
                       })}
                     </div>
                   </div>
                 ))}
               </div>
               <div className="noc-cal-legend">
-                <span>14d ago</span><span style={{ marginLeft: "auto" }}>today →</span>
+                <span>14d ago</span>
+                <span style={{ marginLeft: "auto" }}>today →</span>
               </div>
             </div>
           </div>
@@ -139,10 +200,18 @@ export function NocOverviewScreen() {
         {/* Alert feed + device breakdown */}
         <aside className="sn-form-side">
           <div className="sn-side-card">
-            <div className="sn-side-head">Live alert feed <span className="sn-side-count">{INFRA_ALERTS.length}</span></div>
+            <div className="sn-side-head">
+              Live alert feed <span className="sn-side-count">{INFRA_ALERTS.length}</span>
+            </div>
             <div className="sn-side-body">
-              {feed.map((a) => <FeedRow key={a.id} a={a} />)}
-              <Link to="/alerts" className="sn-btn" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>
+              {feed.map((a) => (
+                <FeedRow key={a.id} a={a} />
+              ))}
+              <Link
+                to="/alerts"
+                className="sn-btn"
+                style={{ width: "100%", justifyContent: "center", marginTop: 8 }}
+              >
                 <i className="fa-solid fa-arrow-right" /> All alerts
               </Link>
             </div>
@@ -153,8 +222,16 @@ export function NocOverviewScreen() {
             <div className="sn-side-body">
               <div className="noc-kinds">
                 {DEVICE_KINDS.map((k) => (
-                  <Link key={k.id} to={`/infra/assets`} className="noc-kind" style={{ textDecoration: "none" }}>
-                    <i className={`fa-${k.iconBrand ? "brands" : "solid"} ${k.icon}`} style={{ color: k.color }} />
+                  <Link
+                    key={k.id}
+                    to={`/infra/assets`}
+                    className="noc-kind"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <i
+                      className={`fa-${k.iconBrand ? "brands" : "solid"} ${k.icon}`}
+                      style={{ color: k.color }}
+                    />
                     <span className="noc-kind-n">{DEVICE_COUNTS[k.id]}</span>
                     <span className="noc-kind-l">{k.label}</span>
                   </Link>
@@ -169,10 +246,20 @@ export function NocOverviewScreen() {
               {EXPORTERS.slice(0, 6).map((e) => (
                 <div key={e.name} className="sn-related-row">
                   <div>
-                    <div className="sn-related-title mono" style={{ fontSize: 12 }}>{e.name}</div>
-                    <div className="sn-related-meta">{e.hosts} hosts · lag {e.lag}</div>
+                    <div className="sn-related-title mono" style={{ fontSize: 12 }}>
+                      {e.name}
+                    </div>
+                    <div className="sn-related-meta">
+                      {e.hosts} hosts · lag {e.lag}
+                    </div>
                   </div>
-                  <Pill kind={e.status === "ok" ? "success" : e.status === "warn" ? "warning" : "critical"}>{e.status}</Pill>
+                  <Pill
+                    kind={
+                      e.status === "ok" ? "success" : e.status === "warn" ? "warning" : "critical"
+                    }
+                  >
+                    {e.status}
+                  </Pill>
                 </div>
               ))}
             </div>
@@ -194,13 +281,30 @@ function SiteTile({ site }: { site: Site }) {
       <div className="noc-site-top">
         <div>
           <div className="noc-site-name">{site.name}</div>
-          <div className="noc-site-region">{site.region} · {site.devices} devices</div>
+          <div className="noc-site-region">
+            {site.region} · {site.devices} devices
+          </div>
         </div>
-        <div className="noc-site-health" style={{ color }}>{site.health}%</div>
+        <div className="noc-site-health" style={{ color }}>
+          {site.health}%
+        </div>
       </div>
-      <div className="noc-site-bar"><div className="noc-site-bar-fill" style={{ width: `${site.health}%`, background: color }} /></div>
+      <div className="noc-site-bar">
+        <div
+          className="noc-site-bar-fill"
+          style={{ width: `${site.health}%`, background: color }}
+        />
+      </div>
       <div className="noc-site-foot">
-        {alerts > 0 ? <span style={{ color: "#dc2626" }}><i className="fa-solid fa-bell" /> {alerts} firing</span> : <span className="text-mute"><i className="fa-solid fa-check" /> nominal</span>}
+        {alerts > 0 ? (
+          <span style={{ color: "#dc2626" }}>
+            <i className="fa-solid fa-bell" /> {alerts} firing
+          </span>
+        ) : (
+          <span className="text-mute">
+            <i className="fa-solid fa-check" /> nominal
+          </span>
+        )}
       </div>
     </div>
   );
@@ -214,7 +318,10 @@ function FeedRow({ a }: { a: InfraAlert }) {
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 12, fontWeight: 550 }}>{a.title}</div>
         <div style={{ fontSize: 11, color: "var(--fg-subtle)" }}>
-          <Link to={`/infra/device/${a.device}`} className="sn-link mono">{a.device}</Link> · {a.since}
+          <Link to={`/infra/device/${a.device}`} className="sn-link mono">
+            {a.device}
+          </Link>{" "}
+          · {a.since}
         </div>
       </div>
     </div>

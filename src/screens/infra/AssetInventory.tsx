@@ -1,13 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Pill } from "@/components";
-import {
-  DEVICES,
-  DEVICE_KINDS,
-  SITES,
-  assetLifecycle,
-  deviceKindById,
-} from "@/data";
+import { DEVICES, DEVICE_KINDS, SITES, assetLifecycle, deviceKindById } from "@/data";
 import type { AssetLifecycle, Device, DeviceStatus } from "@/types";
 import type { PillKind } from "@/components";
 
@@ -44,14 +38,21 @@ export function AssetInventoryScreen() {
       if (kindFilter !== "all" && d.kind !== kindFilter) return false;
       if (siteFilter !== "all" && d.site !== siteFilter) return false;
       if (statusFilter !== "all" && d.status !== statusFilter) return false;
-      if (q && !`${d.id} ${d.model} ${d.ip} ${d.role} ${d.os}`.toLowerCase().includes(q.toLowerCase()))
+      if (
+        q &&
+        !`${d.id} ${d.model} ${d.ip} ${d.role} ${d.os}`.toLowerCase().includes(q.toLowerCase())
+      )
         return false;
       return true;
     });
   }, [kindFilter, siteFilter, statusFilter, q]);
 
   const counts = useMemo(() => {
-    let ok = 0, warn = 0, crit = 0, down = 0, review = 0;
+    let ok = 0,
+      warn = 0,
+      crit = 0,
+      down = 0,
+      review = 0;
     for (const d of DEVICES) {
       if (d.status === "ok") ok++;
       else if (d.status === "warn") warn++;
@@ -65,9 +66,13 @@ export function AssetInventoryScreen() {
   return (
     <div className="page page-fade sn-dash">
       <div className="sn-breadcrumb">
-        <Link to="/dashboard" className="sn-link">Home</Link>
+        <Link to="/dashboard" className="sn-link">
+          Home
+        </Link>
         <span className="sn-bc-sep">›</span>
-        <Link to="/infra" className="sn-link">Infrastructure</Link>
+        <Link to="/infra" className="sn-link">
+          Infrastructure
+        </Link>
         <span className="sn-bc-sep">›</span>
         <span>Asset inventory</span>
       </div>
@@ -77,13 +82,15 @@ export function AssetInventoryScreen() {
           <span className="sn-rec-number">CMDB-CI</span>
           {counts.crit > 0 && <Pill kind="critical">{counts.crit} critical</Pill>}
           {counts.review > 0 && <Pill kind="warning">{counts.review} pending review</Pill>}
-          <Pill kind="neutral" noDot>{counts.total} assets</Pill>
+          <Pill kind="neutral" noDot>
+            {counts.total} assets
+          </Pill>
         </div>
         <div className="sn-form-title-meta">
           <h1>Asset inventory</h1>
           <div className="sn-form-sub">
-            Configuration items across {SITES.length} sites · lifecycle: discovered → pending review → active →
-            decommissioned
+            Configuration items across {SITES.length} sites · lifecycle: discovered → pending review
+            → active → decommissioned
           </div>
         </div>
         <div className="sn-form-actions">
@@ -100,18 +107,47 @@ export function AssetInventoryScreen() {
       </div>
 
       <div className="sn-kpi-strip">
-        <div className="sn-kpi tone-neutral"><div className="sn-kpi-l">Total assets</div><div className="sn-kpi-v">{counts.total}</div><div className="sn-kpi-s">all categories</div></div>
-        <div className="sn-kpi tone-ok"><div className="sn-kpi-l">Healthy</div><div className="sn-kpi-v">{counts.ok}</div><div className="sn-kpi-s">status ok</div></div>
-        <div className="sn-kpi tone-warn"><div className="sn-kpi-l">Warning</div><div className="sn-kpi-v">{counts.warn}</div><div className="sn-kpi-s">degraded</div></div>
-        <div className="sn-kpi tone-crit"><div className="sn-kpi-l">Critical</div><div className="sn-kpi-v">{counts.crit}</div><div className="sn-kpi-s">needs action</div></div>
-        <div className="sn-kpi tone-crit"><div className="sn-kpi-l">Down</div><div className="sn-kpi-v">{counts.down}</div><div className="sn-kpi-s">unreachable</div></div>
-        <div className="sn-kpi tone-warn"><div className="sn-kpi-l">In review</div><div className="sn-kpi-v">{counts.review}</div><div className="sn-kpi-s">awaiting approval</div></div>
+        <div className="sn-kpi tone-neutral">
+          <div className="sn-kpi-l">Total assets</div>
+          <div className="sn-kpi-v">{counts.total}</div>
+          <div className="sn-kpi-s">all categories</div>
+        </div>
+        <div className="sn-kpi tone-ok">
+          <div className="sn-kpi-l">Healthy</div>
+          <div className="sn-kpi-v">{counts.ok}</div>
+          <div className="sn-kpi-s">status ok</div>
+        </div>
+        <div className="sn-kpi tone-warn">
+          <div className="sn-kpi-l">Warning</div>
+          <div className="sn-kpi-v">{counts.warn}</div>
+          <div className="sn-kpi-s">degraded</div>
+        </div>
+        <div className="sn-kpi tone-crit">
+          <div className="sn-kpi-l">Critical</div>
+          <div className="sn-kpi-v">{counts.crit}</div>
+          <div className="sn-kpi-s">needs action</div>
+        </div>
+        <div className="sn-kpi tone-crit">
+          <div className="sn-kpi-l">Down</div>
+          <div className="sn-kpi-v">{counts.down}</div>
+          <div className="sn-kpi-s">unreachable</div>
+        </div>
+        <div className="sn-kpi tone-warn">
+          <div className="sn-kpi-l">In review</div>
+          <div className="sn-kpi-v">{counts.review}</div>
+          <div className="sn-kpi-s">awaiting approval</div>
+        </div>
       </div>
 
       {/* Category chips */}
       <div className="asset-chips">
-        <button type="button" className={`asset-chip${kindFilter === "all" ? " active" : ""}`} onClick={() => setKindFilter("all")}>
-          <i className="fa-solid fa-layer-group" /> All <span className="asset-chip-n">{DEVICES.length}</span>
+        <button
+          type="button"
+          className={`asset-chip${kindFilter === "all" ? " active" : ""}`}
+          onClick={() => setKindFilter("all")}
+        >
+          <i className="fa-solid fa-layer-group" /> All{" "}
+          <span className="asset-chip-n">{DEVICES.length}</span>
         </button>
         {DEVICE_KINDS.map((k) => {
           const n = DEVICES.filter((d) => d.kind === k.id).length;
@@ -123,7 +159,10 @@ export function AssetInventoryScreen() {
               className={`asset-chip${kindFilter === k.id ? " active" : ""}`}
               onClick={() => setKindFilter(k.id)}
             >
-              <i className={`fa-${k.iconBrand ? "brands" : "solid"} ${k.icon}`} style={{ color: k.color }} />
+              <i
+                className={`fa-${k.iconBrand ? "brands" : "solid"} ${k.icon}`}
+                style={{ color: k.color }}
+              />
               {k.label} <span className="asset-chip-n">{n}</span>
             </button>
           );
@@ -134,25 +173,47 @@ export function AssetInventoryScreen() {
       <div className="inc-toolbar">
         <div className="inc-toolbar-search">
           <i className="fa-solid fa-magnifying-glass" />
-          <input placeholder="Search id, model, IP, role…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <input
+            placeholder="Search id, model, IP, role…"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
           {q && (
-            <button type="button" className="inc-toolbar-clear" onClick={() => setQ("")} aria-label="Clear">
+            <button
+              type="button"
+              className="inc-toolbar-clear"
+              onClick={() => setQ("")}
+              aria-label="Clear"
+            >
               <i className="fa-solid fa-xmark" />
             </button>
           )}
         </div>
         <div className="inc-toolbar-group">
           <label>Site</label>
-          <select className="asset-select" value={siteFilter} onChange={(e) => setSiteFilter(e.target.value)}>
+          <select
+            className="asset-select"
+            value={siteFilter}
+            onChange={(e) => setSiteFilter(e.target.value)}
+          >
             <option value="all">All sites</option>
-            {SITES.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+            {SITES.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
           </select>
         </div>
         <div className="inc-toolbar-group">
           <label>Status</label>
           <div className="inc-segmented">
             {(["all", "ok", "warn", "critical", "down"] as const).map((s) => (
-              <button type="button" key={s} className={`inc-seg${statusFilter === s ? " active" : ""}`} onClick={() => setStatusFilter(s)}>
+              <button
+                type="button"
+                key={s}
+                className={`inc-seg${statusFilter === s ? " active" : ""}`}
+                onClick={() => setStatusFilter(s)}
+              >
                 {s === "all" ? "All" : s}
               </button>
             ))}
@@ -183,7 +244,10 @@ export function AssetInventoryScreen() {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={9} style={{ padding: 32, textAlign: "center", color: "var(--fg-subtle)" }}>
+                  <td
+                    colSpan={9}
+                    style={{ padding: 32, textAlign: "center", color: "var(--fg-subtle)" }}
+                  >
                     No assets match the current filters.
                   </td>
                 </tr>
@@ -203,24 +267,47 @@ function AssetRow({ d, onOpen }: { d: Device; onOpen: () => void }) {
   const lc = assetLifecycle(d.id);
   return (
     <tr onClick={onOpen} style={{ cursor: "pointer" }}>
-      <td><span className="asset-dot" style={{ background: STATUS_DOT[d.status] }} title={d.status} /></td>
       <td>
-        <Link to={`/infra/device/${d.id}`} className="sn-link mono" onClick={(e) => e.stopPropagation()}>{d.id}</Link>
+        <span className="asset-dot" style={{ background: STATUS_DOT[d.status] }} title={d.status} />
+      </td>
+      <td>
+        <Link
+          to={`/infra/device/${d.id}`}
+          className="sn-link mono"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {d.id}
+        </Link>
         <div style={{ fontSize: 11, color: "var(--fg-subtle)" }}>{d.role}</div>
       </td>
       <td>
         <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-          {kind && <i className={`fa-${kind.iconBrand ? "brands" : "solid"} ${kind.icon}`} style={{ color: kind.color, fontSize: 12 }} />}
+          {kind && (
+            <i
+              className={`fa-${kind.iconBrand ? "brands" : "solid"} ${kind.icon}`}
+              style={{ color: kind.color, fontSize: 12 }}
+            />
+          )}
           {d.model}
         </span>
-        <div style={{ fontSize: 11, color: "var(--fg-subtle)" }} className="mono">{d.os}</div>
+        <div style={{ fontSize: 11, color: "var(--fg-subtle)" }} className="mono">
+          {d.os}
+        </div>
       </td>
       <td>{SITES.find((s) => s.id === d.site)?.name ?? d.site}</td>
       <td className="mono">{d.ip}</td>
-      <td><MiniBar pct={d.cpu} /></td>
-      <td><MiniBar pct={d.mem} /></td>
-      <td><Pill kind={LIFECYCLE_PILL[lc]}>{LIFECYCLE_LABEL[lc]}</Pill></td>
-      <td className="mono" style={{ fontSize: 11, color: "var(--fg-subtle)" }}>{d.agent}</td>
+      <td>
+        <MiniBar pct={d.cpu} />
+      </td>
+      <td>
+        <MiniBar pct={d.mem} />
+      </td>
+      <td>
+        <Pill kind={LIFECYCLE_PILL[lc]}>{LIFECYCLE_LABEL[lc]}</Pill>
+      </td>
+      <td className="mono" style={{ fontSize: 11, color: "var(--fg-subtle)" }}>
+        {d.agent}
+      </td>
     </tr>
   );
 }

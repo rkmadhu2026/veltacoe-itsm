@@ -52,7 +52,11 @@ export function Header({ onOpenCommand }: HeaderProps) {
           <button
             type="button"
             className="hdr-incident-pill"
-            onClick={() => navigate(`/incidents/${INCIDENTS.find((i) => i.sev === 1 && i.status === "active")?.id ?? ""}`)}
+            onClick={() =>
+              navigate(
+                `/incidents/${INCIDENTS.find((i) => i.sev === 1 && i.status === "active")?.id ?? ""}`,
+              )
+            }
           >
             <span className="pulse-dot" />
             <span>{activeSev1} active Sev 1</span>

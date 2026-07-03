@@ -455,12 +455,7 @@ export interface Tweaks {
 
 export type AlertLabelSeverity = "critical" | "warning" | "info";
 export type AlertRuleState = "firing" | "pending" | "inactive";
-export type AlertInstanceState =
-  | "firing"
-  | "pending"
-  | "silenced"
-  | "inhibited"
-  | "resolved";
+export type AlertInstanceState = "firing" | "pending" | "silenced" | "inhibited" | "resolved";
 
 export interface AlertRule {
   id: string;
@@ -508,13 +503,7 @@ export interface AlertInstance {
   inhibitedBy?: string;
 }
 
-export type ReceiverKind =
-  | "pagerduty"
-  | "email"
-  | "slack"
-  | "teams"
-  | "webhook"
-  | "redmine";
+export type ReceiverKind = "pagerduty" | "email" | "slack" | "teams" | "webhook" | "redmine";
 
 export interface AlertReceiver {
   id: string;
@@ -662,11 +651,7 @@ export type Criticality = "platinum" | "gold" | "silver" | "bronze";
 // Asset lifecycle: discovered → pending_review → active → decommissioned.
 // Auto-discovery NEVER auto-commits — candidates land in a human review queue.
 
-export type AssetLifecycle =
-  | "discovered"
-  | "pending_review"
-  | "active"
-  | "decommissioned";
+export type AssetLifecycle = "discovered" | "pending_review" | "active" | "decommissioned";
 
 export type DiscoverySource = "snmp" | "vendor_api" | "lldp" | "cdp" | "agent" | "cidr_sweep";
 

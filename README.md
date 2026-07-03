@@ -17,15 +17,15 @@ npm install
 npm run dev          # http://127.0.0.1:5174
 ```
 
-| Command           | What it does                                       |
-| ----------------- | -------------------------------------------------- |
-| `npm run dev`     | Vite dev server with HMR on port 5174              |
-| `npm run build`   | `tsc --noEmit && vite build` → emits `dist/`       |
-| `npm run preview` | Serves built `dist/` on port 4173                  |
-| `npm test`        | Playwright smoke spec against the preview server   |
-| `npm run lint`    | ESLint over `src/` + `tests/`                      |
+| Command             | What it does                                     |
+| ------------------- | ------------------------------------------------ |
+| `npm run dev`       | Vite dev server with HMR on port 5174            |
+| `npm run build`     | `tsc --noEmit && vite build` → emits `dist/`     |
+| `npm run preview`   | Serves built `dist/` on port 4173                |
+| `npm test`          | Playwright smoke spec against the preview server |
+| `npm run lint`      | ESLint over `src/` + `tests/`                    |
 | `npm run typecheck` | `tsc --noEmit`                                   |
-| `npm run format`  | Prettier-format the repo                           |
+| `npm run format`    | Prettier-format the repo                         |
 
 ## Project layout
 
@@ -68,15 +68,15 @@ URL-driven. Auth state lives in `localStorage.veltacore.auth.v1`; tenant selecti
 
 Highlights:
 
-| Path                       | Screen                       |
-| -------------------------- | ---------------------------- |
-| `/`                        | Landing (unauthed)           |
-| `/login`, `/signup`        | SSO + 3-step wizard          |
-| `/dashboard`               | Operations dashboard         |
-| `/incidents/:id`           | Incident detail              |
-| `/infra/device/:id`        | Device detail                |
-| `/integrations/:name`      | Integration detail           |
-| `/admin/{tenants,billing,usage}` | Super-admin               |
+| Path                             | Screen               |
+| -------------------------------- | -------------------- |
+| `/`                              | Landing (unauthed)   |
+| `/login`, `/signup`              | SSO + 3-step wizard  |
+| `/dashboard`                     | Operations dashboard |
+| `/incidents/:id`                 | Incident detail      |
+| `/infra/device/:id`              | Device detail        |
+| `/integrations/:name`            | Integration detail   |
+| `/admin/{tenants,billing,usage}` | Super-admin          |
 
 ## Keyboard shortcuts
 
@@ -103,19 +103,19 @@ Build artifacts (`dist/`) and the Playwright HTML report upload on success/failu
 
 The architectural rewrite is complete (Vite + TS + router + Docker + CI). Most screens render through `<Placeholder>` until their content is ported from the legacy `screens/*.jsx` (which lived at the project root before cutover). Each remaining migration is a mechanical swap against the typed data layer in `src/data/`.
 
-| Phase | Status                                                                  |
-| ----- | ----------------------------------------------------------------------- |
-| 1     | ✅ Vite + TypeScript foundation                                         |
-| 2     | ✅ Type system + data layer                                             |
-| 3     | ✅ Primitives + shell + tweaks panel                                    |
-| 4     | ✅ Routing + auth + Landing/Signin/Signup                               |
-| 5     | ✅ Dashboard fully migrated · other ITSM screens via Placeholder        |
+| Phase | Status                                                                 |
+| ----- | ---------------------------------------------------------------------- |
+| 1     | ✅ Vite + TypeScript foundation                                        |
+| 2     | ✅ Type system + data layer                                            |
+| 3     | ✅ Primitives + shell + tweaks panel                                   |
+| 4     | ✅ Routing + auth + Landing/Signin/Signup                              |
+| 5     | ✅ Dashboard fully migrated · other ITSM screens via Placeholder       |
 | 6     | ⏸ Infra screens — Placeholder                                          |
 | 7     | ⏸ Admin screens — Placeholder                                          |
-| 8     | ⏸ Styles split — legacy `styles.css` imported as-is for now             |
-| 9     | ✅ Docker + nginx + CI                                                  |
-| 10    | ✅ Playwright smoke spec migrated to TS + URL routing                   |
-| 11    | ✅ Cutover — legacy root `.jsx`, scripts, screens, uploads all removed  |
+| 8     | ⏸ Styles split — legacy `styles.css` imported as-is for now            |
+| 9     | ✅ Docker + nginx + CI                                                 |
+| 10    | ✅ Playwright smoke spec migrated to TS + URL routing                  |
+| 11    | ✅ Cutover — legacy root `.jsx`, scripts, screens, uploads all removed |
 
 ## Contact
 

@@ -12,10 +12,7 @@ import {
   userById,
 } from "@/data";
 import { useStatusUpdates } from "@/lib/useStatusUpdates";
-import type {
-  ComponentStatus,
-  StatusIncidentStage,
-} from "@/types";
+import type { ComponentStatus, StatusIncidentStage } from "@/types";
 
 const STATUS_COLOR: Record<ComponentStatus, string> = {
   operational: "#10b981",
@@ -46,10 +43,7 @@ export function IncidentDetailScreen() {
   const incident = INCIDENTS.find((i) => i.id === id);
 
   // ── Hooks must run before any early return ─────────────────────────────
-  const onCallEntries = useMemo(
-    () => (incident ? onCallForIncident(incident) : []),
-    [incident],
-  );
+  const onCallEntries = useMemo(() => (incident ? onCallForIncident(incident) : []), [incident]);
   const statusLink = useMemo(
     () => (incident ? statusPageLinkForIncident(incident) : null),
     [incident],
@@ -114,9 +108,13 @@ export function IncidentDetailScreen() {
   return (
     <div className="page page-fade sn-dash">
       <div className="sn-breadcrumb">
-        <Link to="/dashboard" className="sn-link">Home</Link>
+        <Link to="/dashboard" className="sn-link">
+          Home
+        </Link>
         <span className="sn-bc-sep">›</span>
-        <Link to="/incidents" className="sn-link">Incidents</Link>
+        <Link to="/incidents" className="sn-link">
+          Incidents
+        </Link>
         <span className="sn-bc-sep">›</span>
         <span>{incident.id}</span>
       </div>
@@ -184,12 +182,41 @@ export function IncidentDetailScreen() {
 
       {/* KPI strip */}
       <div className="sn-kpi-strip">
-        <KpiBox label="SLA budget" value={`${Math.round(incident.sla * 100)}%`} sub="of SLO window" tone={incident.sla < 0.4 ? "crit" : incident.sla < 0.7 ? "warn" : "ok"} />
-        <KpiBox label="SLO burn rate" value={`${incident.sloBurn}×`} sub="vs baseline" tone={incident.sloBurn > 5 ? "crit" : incident.sloBurn > 2 ? "warn" : "ok"} />
+        <KpiBox
+          label="SLA budget"
+          value={`${Math.round(incident.sla * 100)}%`}
+          sub="of SLO window"
+          tone={incident.sla < 0.4 ? "crit" : incident.sla < 0.7 ? "warn" : "ok"}
+        />
+        <KpiBox
+          label="SLO burn rate"
+          value={`${incident.sloBurn}×`}
+          sub="vs baseline"
+          tone={incident.sloBurn > 5 ? "crit" : incident.sloBurn > 2 ? "warn" : "ok"}
+        />
         <KpiBox label="Impacted" value={incident.impacted} sub="customers/teams" tone="neutral" />
-        <KpiBox label="Service" value={service?.status ?? incident.service} sub={incident.service} tone={service?.status === "down" ? "crit" : service?.status === "degraded" ? "warn" : "ok"} />
-        <KpiBox label="On-call" value={primaryUser?.name.split(" ")[0] ?? "—"} sub={primaryOnCall?.schedule.name ?? "no schedule"} tone={primaryUser ? "ok" : "neutral"} />
-        <KpiBox label="Status page" value={statusLink ? (latestPublish ? `Updated · ${publishHistory.length}` : "Linked") : "—"} sub={statusLink?.page.domain ?? "no public component"} tone={statusLink ? (latestPublish ? "ok" : "warn") : "neutral"} />
+        <KpiBox
+          label="Service"
+          value={service?.status ?? incident.service}
+          sub={incident.service}
+          tone={
+            service?.status === "down" ? "crit" : service?.status === "degraded" ? "warn" : "ok"
+          }
+        />
+        <KpiBox
+          label="On-call"
+          value={primaryUser?.name.split(" ")[0] ?? "—"}
+          sub={primaryOnCall?.schedule.name ?? "no schedule"}
+          tone={primaryUser ? "ok" : "neutral"}
+        />
+        <KpiBox
+          label="Status page"
+          value={
+            statusLink ? (latestPublish ? `Updated · ${publishHistory.length}` : "Linked") : "—"
+          }
+          sub={statusLink?.page.domain ?? "no public component"}
+          tone={statusLink ? (latestPublish ? "ok" : "warn") : "neutral"}
+        />
       </div>
 
       <div className="sn-form-layout">
@@ -258,7 +285,9 @@ export function IncidentDetailScreen() {
                           {ev.meta && (
                             <div className="sn-activity-meta">
                               {ev.meta.map((m, j) => (
-                                <span key={j} className="sn-tag">{m}</span>
+                                <span key={j} className="sn-tag">
+                                  {m}
+                                </span>
                               ))}
                             </div>
                           )}
@@ -274,10 +303,7 @@ export function IncidentDetailScreen() {
                   {CHAT.map((m, i) => {
                     const u = m.u ? userById(m.u) : null;
                     return (
-                      <div
-                        key={i}
-                        className={`incd-chat-row${m.ai ? " ai" : ""}`}
-                      >
+                      <div key={i} className={`incd-chat-row${m.ai ? " ai" : ""}`}>
                         {m.ai ? (
                           <div className="incd-chat-avatar ai">AI</div>
                         ) : (
@@ -285,9 +311,11 @@ export function IncidentDetailScreen() {
                         )}
                         <div className="incd-chat-body">
                           <div className="incd-chat-head">
-                            <b>{m.ai ? "VeltaCore AI" : u?.name ?? "Unknown"}</b>
+                            <b>{m.ai ? "VeltaCore AI" : (u?.name ?? "Unknown")}</b>
                             {m.role && (
-                              <span className="text-mute" style={{ fontSize: 11 }}>{m.role}</span>
+                              <span className="text-mute" style={{ fontSize: 11 }}>
+                                {m.role}
+                              </span>
                             )}
                             <span className="incd-chat-time">{m.time}</span>
                           </div>
@@ -306,21 +334,27 @@ export function IncidentDetailScreen() {
                       <div className="sn-related-title">Connection pool sizing regression</div>
                       <div className="sn-related-meta">Problem · 4 incidents linked</div>
                     </div>
-                    <Link to="/problems/PRB-3912" className="sn-link mono">PRB-3912</Link>
+                    <Link to="/problems/PRB-3912" className="sn-link mono">
+                      PRB-3912
+                    </Link>
                   </div>
                   <div className="sn-related-row">
                     <div>
                       <div className="sn-related-title">Pool config rollback</div>
                       <div className="sn-related-meta">Change · approved · implementing</div>
                     </div>
-                    <Link to="/changes/CHG-2219" className="sn-link mono">CHG-2219</Link>
+                    <Link to="/changes/CHG-2219" className="sn-link mono">
+                      CHG-2219
+                    </Link>
                   </div>
                   <div className="sn-related-row">
                     <div>
                       <div className="sn-related-title">Stripe pool exhaustion runbook</div>
                       <div className="sn-related-meta">Knowledge · 1,283 views</div>
                     </div>
-                    <Link to="/knowledge/KB-2114" className="sn-link mono">KB-2114</Link>
+                    <Link to="/knowledge/KB-2114" className="sn-link mono">
+                      KB-2114
+                    </Link>
                   </div>
                 </div>
               )}
@@ -330,8 +364,8 @@ export function IncidentDetailScreen() {
                   <i className="fa-solid fa-bolt" />
                   <h4>Automation suggestions</h4>
                   <p>
-                    VeltaCore AI recommends running <b>pool-expansion-v3</b> and rolling back
-                    deploy <code>2f8a1c</code>. Both have one-click runbook entries available.
+                    VeltaCore AI recommends running <b>pool-expansion-v3</b> and rolling back deploy{" "}
+                    <code>2f8a1c</code>. Both have one-click runbook entries available.
                   </p>
                 </div>
               )}
@@ -399,7 +433,8 @@ export function IncidentDetailScreen() {
                     </Link>
                   </div>
                   <div style={{ fontSize: 11, color: "var(--fg-subtle)" }}>
-                    Current status: <b style={{ color: STATUS_COLOR[statusLink.component.status] }}>
+                    Current status:{" "}
+                    <b style={{ color: STATUS_COLOR[statusLink.component.status] }}>
                       {STATUS_LABEL[statusLink.component.status]}
                     </b>
                   </div>
@@ -410,8 +445,8 @@ export function IncidentDetailScreen() {
                   {latestPublish ? (
                     <>
                       <div className="incd-publish-confirm">
-                        <i className="fa-solid fa-circle-check" />{" "}
-                        Last update · {STAGE_LABEL[latestPublish.stage]} at{" "}
+                        <i className="fa-solid fa-circle-check" /> Last update ·{" "}
+                        {STAGE_LABEL[latestPublish.stage]} at{" "}
                         {new Date(latestPublish.at).toLocaleTimeString()}
                       </div>
                       <button
@@ -435,15 +470,11 @@ export function IncidentDetailScreen() {
                   )}
                   {publishHistory.length > 1 && (
                     <details className="incd-publish-history">
-                      <summary>
-                        {publishHistory.length} updates posted on this incident
-                      </summary>
+                      <summary>{publishHistory.length} updates posted on this incident</summary>
                       <ol>
                         {publishHistory.map((p) => (
                           <li key={p.id}>
-                            <span className="incd-publish-stage">
-                              {STAGE_LABEL[p.stage]}
-                            </span>
+                            <span className="incd-publish-stage">{STAGE_LABEL[p.stage]}</span>
                             <span className="incd-publish-time">
                               {new Date(p.at).toLocaleString()}
                             </span>
@@ -502,7 +533,11 @@ export function IncidentDetailScreen() {
 
       {/* Publish-to-status-page modal */}
       {publishOpen && statusLink && (
-        <div className="incd-modal-backdrop" onClick={() => setPublishOpen(false)} role="presentation">
+        <div
+          className="incd-modal-backdrop"
+          onClick={() => setPublishOpen(false)}
+          role="presentation"
+        >
           <div
             className="incd-modal"
             onClick={(e) => e.stopPropagation()}
@@ -643,7 +678,15 @@ function KpiBox({ label, value, sub, tone }: KpiProps) {
   );
 }
 
-function SideField({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
+function SideField({
+  label,
+  value,
+  mono = false,
+}: {
+  label: string;
+  value: string;
+  mono?: boolean;
+}) {
   return (
     <div className="sn-form-group">
       <div className="sn-field-label">{label}</div>

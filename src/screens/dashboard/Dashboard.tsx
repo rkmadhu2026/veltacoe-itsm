@@ -39,8 +39,7 @@ export function DashboardScreen() {
 
   // Status-page rollups across every page + active status incidents.
   const statusSummary = useMemo(
-    () =>
-      STATUS_PAGES.map((p) => ({ page: p, rollup: rollUpStatus(p.id) })),
+    () => STATUS_PAGES.map((p) => ({ page: p, rollup: rollUpStatus(p.id) })),
     [],
   );
   const activeStatusIncidents = STATUS_INCIDENTS.filter((i) => i.stage !== "resolved");
@@ -114,11 +113,13 @@ export function DashboardScreen() {
             <div className="ops-signal-foot">6 alerts grouped into 2 Sev-1 patterns</div>
           </div>
           <div className="ops-risk-stack">
-            {([
-              ["Node Exporter hosts", "412", "ok"],
-              ["Prometheus targets", "866", "ok"],
-              ["Grafana dashboards", "12", "ok"],
-            ] as const).map(([label, value, tone]) => (
+            {(
+              [
+                ["Node Exporter hosts", "412", "ok"],
+                ["Prometheus targets", "866", "ok"],
+                ["Grafana dashboards", "12", "ok"],
+              ] as const
+            ).map(([label, value, tone]) => (
               <div key={label} className={`ops-risk-row ${tone}`}>
                 <span>{label}</span>
                 <b>{value}</b>
@@ -130,9 +131,7 @@ export function DashboardScreen() {
 
       <div className="sn-form-header">
         <div className="sn-form-title-row">
-          <span className="sn-rec-number">
-            DASH-{String(tenant.name.length).padStart(4, "0")}
-          </span>
+          <span className="sn-rec-number">DASH-{String(tenant.name.length).padStart(4, "0")}</span>
           <span className="sn-pill prio-1">
             <i className="fa-solid fa-circle" /> 1 — Critical
           </span>
@@ -150,9 +149,15 @@ export function DashboardScreen() {
           </div>
         </div>
         <div className="sn-form-actions">
-          <button className="sn-btn"><i className="fa-solid fa-share-nodes" /> Share</button>
-          <button className="sn-btn"><i className="fa-solid fa-file-export" /> Export</button>
-          <button className="sn-btn"><i className="fa-solid fa-print" /> Print</button>
+          <button className="sn-btn">
+            <i className="fa-solid fa-share-nodes" /> Share
+          </button>
+          <button className="sn-btn">
+            <i className="fa-solid fa-file-export" /> Export
+          </button>
+          <button className="sn-btn">
+            <i className="fa-solid fa-print" /> Print
+          </button>
           <button
             type="button"
             className="sn-btn primary"
@@ -411,9 +416,7 @@ export function DashboardScreen() {
                     <td className="mono">{s.uptime}%</td>
                     <td className="mono">{s.p95}</td>
                     <td
-                      className={`mono ${
-                        s.err > 1 ? "tone-crit" : s.err > 0.1 ? "tone-warn" : ""
-                      }`}
+                      className={`mono ${s.err > 1 ? "tone-crit" : s.err > 0.1 ? "tone-warn" : ""}`}
                     >
                       {s.err}%
                     </td>
@@ -603,10 +606,7 @@ export function DashboardScreen() {
               <Field label="Assigned to" value={<UserById id="u1" />} />
               <Field label="Group" value="SRE-Tier-1" />
               <Field label="Caller" value={<a className="sn-link">Monitoring System</a>} />
-              <Field
-                label="Opened by"
-                value={<a className="sn-link">prometheus-alertmanager</a>}
-              />
+              <Field label="Opened by" value={<a className="sn-link">prometheus-alertmanager</a>} />
               <Field label="Updated" value="2 seconds ago" />
             </div>
           </div>
@@ -842,11 +842,7 @@ interface FormSectionProps {
 function FormSection({ id, title, badge, collapsed, onToggle, children }: FormSectionProps) {
   return (
     <div className="sn-form-section">
-      <button
-        type="button"
-        className="sn-section-header"
-        onClick={() => onToggle && onToggle(id)}
-      >
+      <button type="button" className="sn-section-header" onClick={() => onToggle && onToggle(id)}>
         <i className={`fa-solid fa-chevron-${collapsed ? "right" : "down"}`} />
         <span className="sn-section-title">{title}</span>
         {badge && <span className="sn-section-badge">{badge}</span>}

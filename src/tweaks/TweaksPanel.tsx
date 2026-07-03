@@ -242,11 +242,7 @@ interface TweakSelectProps {
 export function TweakSelect({ label, value, options, onChange }: TweakSelectProps) {
   return (
     <TweakRow label={label}>
-      <select
-        className="twk-field"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      >
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
         {options.map((o) => {
           const v = typeof o === "object" ? o.value : o;
           const l = typeof o === "object" ? o.label : o;
@@ -293,7 +289,9 @@ interface AppTweaksProps {
 export function AppTweaks({ t, setTweak }: AppTweaksProps) {
   // useCallback prevents re-binding child handlers on every render.
   const set = useCallback(
-    <K extends keyof Tweaks>(k: K) => (v: Tweaks[K]) => setTweak(k, v),
+    <K extends keyof Tweaks>(k: K) =>
+      (v: Tweaks[K]) =>
+        setTweak(k, v),
     [setTweak],
   );
   return (
@@ -343,11 +341,7 @@ export function AppTweaks({ t, setTweak }: AppTweaksProps) {
         />
       </TweakSection>
       <TweakSection label="Charts">
-        <TweakToggle
-          label="Sparklines"
-          value={t.showSparklines}
-          onChange={set("showSparklines")}
-        />
+        <TweakToggle label="Sparklines" value={t.showSparklines} onChange={set("showSparklines")} />
       </TweakSection>
     </TweaksPanel>
   );

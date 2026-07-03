@@ -17,12 +17,17 @@ export function SigninScreen() {
         <div className="login-visual">
           <div className="login-browser">
             <div className="login-browser-top">
-              <i /><i /><i />
+              <i />
+              <i />
+              <i />
               <span>ops.veltacore-itsm.io</span>
             </div>
             <div className="login-dashboard-preview">
               <div className="preview-rail">
-                <span /><span /><span /><span />
+                <span />
+                <span />
+                <span />
+                <span />
               </div>
               <div className="preview-main">
                 <div className="preview-head">
@@ -35,9 +40,18 @@ export function SigninScreen() {
                   ))}
                 </div>
                 <div className="preview-grid">
-                  <div><b>99.99%</b><span>uptime</span></div>
-                  <div><b>14s</b><span>RCA</span></div>
-                  <div><b>62%</b><span>MTTR</span></div>
+                  <div>
+                    <b>99.99%</b>
+                    <span>uptime</span>
+                  </div>
+                  <div>
+                    <b>14s</b>
+                    <span>RCA</span>
+                  </div>
+                  <div>
+                    <b>62%</b>
+                    <span>MTTR</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -81,7 +95,9 @@ export function SigninScreen() {
               </label>
               <a>Forgot password?</a>
             </div>
-            <button type="submit" className="login-submit">Log in</button>
+            <button type="submit" className="login-submit">
+              Log in
+            </button>
           </form>
           <p className="auth-foot">
             Don't have an account? <a onClick={() => navigate("/signup")}>Sign up</a>

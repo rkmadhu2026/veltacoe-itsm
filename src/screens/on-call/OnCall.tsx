@@ -46,7 +46,9 @@ export function OnCallScreen() {
     current: whoIsOnCall(s.id, now),
   }));
 
-  const activeOverrides = ON_CALL_OVERRIDES.filter((o) => new Date(o.start) <= now && new Date(o.end) > now);
+  const activeOverrides = ON_CALL_OVERRIDES.filter(
+    (o) => new Date(o.start) <= now && new Date(o.end) > now,
+  );
 
   return (
     <div className="page page-fade sn-dash">
@@ -90,10 +92,30 @@ export function OnCallScreen() {
 
       {/* KPI strip — same vocabulary as the rest of the app */}
       <div className="sn-kpi-strip">
-        <Kpi label="Active schedules" value={SCHEDULES.length} sub="across 3 tenants" tone="neutral" />
-        <Kpi label="On-call right now" value={liveOnCall.filter((x) => x.current).length} sub="primary layer" tone="ok" />
-        <Kpi label="Escalation policies" value={ESCALATION_POLICIES.length} sub={`avg ${avgSteps()} steps`} tone="neutral" />
-        <Kpi label="Active overrides" value={activeOverrides.length} sub="vacation / OOO" tone={activeOverrides.length ? "warn" : "neutral"} />
+        <Kpi
+          label="Active schedules"
+          value={SCHEDULES.length}
+          sub="across 3 tenants"
+          tone="neutral"
+        />
+        <Kpi
+          label="On-call right now"
+          value={liveOnCall.filter((x) => x.current).length}
+          sub="primary layer"
+          tone="ok"
+        />
+        <Kpi
+          label="Escalation policies"
+          value={ESCALATION_POLICIES.length}
+          sub={`avg ${avgSteps()} steps`}
+          tone="neutral"
+        />
+        <Kpi
+          label="Active overrides"
+          value={activeOverrides.length}
+          sub="vacation / OOO"
+          tone={activeOverrides.length ? "warn" : "neutral"}
+        />
         <Kpi label="Coverage" value="100%" sub="no gaps this week" tone="ok" />
         <Kpi label="Avg ack time" value="3m 12s" sub="last 30 days" tone="ok" />
       </div>
@@ -114,7 +136,9 @@ export function OnCallScreen() {
                 >
                   <div className="oncall-tab-head">
                     <b>{s.name}</b>
-                    <span className="text-mute" style={{ fontSize: 11 }}>{s.team}</span>
+                    <span className="text-mute" style={{ fontSize: 11 }}>
+                      {s.team}
+                    </span>
                   </div>
                   {live ? (
                     <div className="oncall-tab-now">
@@ -135,7 +159,9 @@ export function OnCallScreen() {
                       </span>
                     </div>
                   ) : (
-                    <span className="text-mute" style={{ fontSize: 11 }}>—</span>
+                    <span className="text-mute" style={{ fontSize: 11 }}>
+                      —
+                    </span>
                   )}
                 </button>
               );
@@ -210,7 +236,9 @@ export function OnCallScreen() {
               {liveOnCall.map(({ schedule, current }) => (
                 <div key={schedule.id} className="sn-related-row">
                   <div>
-                    <div className="sn-related-title" style={{ fontSize: 12 }}>{schedule.name}</div>
+                    <div className="sn-related-title" style={{ fontSize: 12 }}>
+                      {schedule.name}
+                    </div>
                     <div className="sn-related-meta">{schedule.team}</div>
                   </div>
                   {current ? (
@@ -225,7 +253,9 @@ export function OnCallScreen() {
                       </span>
                     </div>
                   ) : (
-                    <span className="text-mute" style={{ fontSize: 11 }}>—</span>
+                    <span className="text-mute" style={{ fontSize: 11 }}>
+                      —
+                    </span>
                   )}
                 </div>
               ))}
@@ -245,7 +275,11 @@ export function OnCallScreen() {
                 activeOverrides.map((o) => {
                   const sched = SCHEDULES.find((s) => s.id === o.scheduleId);
                   return (
-                    <div key={o.id} className="sn-related-row" style={{ flexDirection: "column", alignItems: "flex-start", gap: 4 }}>
+                    <div
+                      key={o.id}
+                      className="sn-related-row"
+                      style={{ flexDirection: "column", alignItems: "flex-start", gap: 4 }}
+                    >
                       <div style={{ fontSize: 12, fontWeight: 550 }}>{sched?.name}</div>
                       <div style={{ fontSize: 11, color: "var(--fg-subtle)" }}>
                         <UserById id={o.originalUserId} showName={false} /> →{" "}
@@ -294,13 +328,18 @@ export function OnCallScreen() {
                     style={{ cursor: "pointer", textAlign: "left" }}
                   >
                     <div>
-                      <div className="sn-related-title" style={{ fontSize: 12 }}>{p.name}</div>
+                      <div className="sn-related-title" style={{ fontSize: 12 }}>
+                        {p.name}
+                      </div>
                       <div className="sn-related-meta">
                         {p.steps.length} step{p.steps.length === 1 ? "" : "s"}
                         {p.repeat > 0 ? ` · repeats ×${p.repeat}` : ""}
                       </div>
                     </div>
-                    <i className="fa-solid fa-chevron-right" style={{ fontSize: 11, color: "var(--fg-subtle)" }} />
+                    <i
+                      className="fa-solid fa-chevron-right"
+                      style={{ fontSize: 11, color: "var(--fg-subtle)" }}
+                    />
                   </button>
                 );
               })}
@@ -439,9 +478,7 @@ function EscalationStepRow({ step }: { step: EscalationStep }) {
       <div className="oncall-step-target">{targetLabel}</div>
       <div className="oncall-step-meta">
         <span>
-          {step.afterMinutes === 0
-            ? "Immediately"
-            : `+${step.afterMinutes}m if not acked`}
+          {step.afterMinutes === 0 ? "Immediately" : `+${step.afterMinutes}m if not acked`}
         </span>
         {step.channels.map((c) => (
           <span key={c} className="oncall-channel">

@@ -21,7 +21,10 @@ export function Placeholder({ title }: { title?: string }) {
       <div className="card">
         <div className="card-body" style={{ padding: 32, color: "var(--fg-subtle)", fontSize: 13 }}>
           <p style={{ margin: "0 0 12px" }}>
-            <i className="fa-solid fa-circle-info" style={{ marginRight: 8, color: "var(--accent)" }} />
+            <i
+              className="fa-solid fa-circle-info"
+              style={{ marginRight: 8, color: "var(--accent)" }}
+            />
             This route is wired into the new React Router + TypeScript shell. The legacy{" "}
             <code>screens/*.jsx</code> source is still on disk and will be ported to{" "}
             <code>src/screens/</code> as part of subsequent phases.
