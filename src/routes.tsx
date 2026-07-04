@@ -19,6 +19,7 @@ import { ApmScreen } from "@/screens/observe/Apm";
 import { LogsScreen } from "@/screens/observe/Logs";
 import { EntityMapScreen } from "@/screens/observe/EntityMap";
 import { OnboardingScreen } from "@/screens/onboarding/Onboarding";
+import { TradingOpsScreen } from "@/screens/trading-ops/TradingOps";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -99,6 +100,7 @@ export function AppRoutes() {
         <Route path="/users" element={<Placeholder title="People & roles" />} />
         <Route path="/settings" element={<Placeholder title="Settings" />} />
         <Route path="/cross-tenant" element={<Placeholder title="Cross-tenant" />} />
+        <Route path="/trading-ops" element={<TradingOpsScreen />} />
         <Route path="/onboarding" element={<OnboardingScreen />} />
       </Route>
 

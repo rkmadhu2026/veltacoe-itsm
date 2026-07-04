@@ -756,3 +756,104 @@ export interface LogEntry {
   /** Optional trace correlation id. */
   traceId?: string;
 }
+
+// ---------- Trading operations ----------
+// BOD/EOD workflows, holiday calendar, and the synthetic/adapter/queue/file
+// checks that gate a trading day. States mirror the platform spec.
+
+export type CheckState =
+  | "PENDING"
+  | "RUNNING"
+  | "PASSED"
+  | "WARNING"
+  | "FAILED"
+  | "SKIPPED_HOLIDAY"
+  | "MANUAL_OVERRIDE";
+
+export type WorkflowKind = "BOD" | "EOD";
+
+export interface TradingStep {
+  id: string;
+  workflow: WorkflowKind;
+  seq: number;
+  name: string;
+  description: string;
+  state: CheckState;
+  /** "HH:mm" scheduled start (IST). */
+  scheduledAt: string;
+  /** Runtime like "42s" once finished. */
+  duration: string | null;
+  owner: string;
+  /** Optional operator note (required for MANUAL_OVERRIDE). */
+  note?: string;
+}
+
+export type SyntheticKind = "http" | "tcp" | "dns" | "ssl";
+
+export interface SyntheticCheck {
+  id: string;
+  kind: SyntheticKind;
+  name: string;
+  target: string;
+  /** Latest probe result. */
+  state: CheckState;
+  latency: string;
+  /** Kind-specific detail: HTTP code, cert days left, resolved IP, banner. */
+  detail: string;
+  intervalSec: number;
+  lastRun: string;
+}
+
+export interface AdapterCheck {
+  id: string;
+  name: string;
+  /** Exchange segment / venue. */
+  segment: string;
+  host: string;
+  state: CheckState;
+  /** Heartbeat age. */
+  heartbeat: string;
+  /** Messages per second through the adapter. */
+  msgRate: string;
+  /** Sequence gap count today. */
+  seqGaps: number;
+}
+
+export interface QueueCheck {
+  id: string;
+  queue: string;
+  broker: string;
+  depth: number;
+  consumers: number;
+  /** Publish/deliver rates. */
+  inRate: string;
+  outRate: string;
+  state: CheckState;
+}
+
+export interface FileTransferCheck {
+  id: string;
+  name: string;
+  direction: "inbound" | "outbound";
+  source: string;
+  destination: string;
+  /** "HH:mm" cutoff time (IST). */
+  deadline: string;
+  state: CheckState;
+  sizeOrNote: string;
+}
+
+export interface Holiday {
+  /** ISO date "YYYY-MM-DD". */
+  date: string;
+  name: string;
+  markets: string[];
+}
+
+/** BOD/EOD heatmap cell: one workflow step on one business day. */
+export interface BodEodCell {
+  stepId: string;
+  /** Business-day label like "Jun 23". */
+  day: string;
+  state: CheckState;
+}

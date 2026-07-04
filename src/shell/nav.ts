@@ -47,6 +47,14 @@ export const NAV: readonly NavSection[] = [
         matchPrefix: "/on-call",
       },
       {
+        id: "trading-ops",
+        label: "Trading ops",
+        icon: "fa-arrow-trend-up",
+        to: "/trading-ops",
+        matchPrefix: "/trading-ops",
+        badge: { n: "BOD ✓", kind: "info" },
+      },
+      {
         id: "problems",
         label: "Problems",
         icon: "fa-magnifying-glass-chart",
