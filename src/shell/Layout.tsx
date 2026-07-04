@@ -32,7 +32,8 @@ export function Layout() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+      // Case-insensitive so the shortcut survives Caps Lock / Shift.
+      if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setSwitcherOpen(true);
       } else if (e.key === "Escape") {

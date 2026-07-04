@@ -9,6 +9,7 @@ export default defineConfig({
   fullyParallel: true,
   use: {
     baseURL: "http://127.0.0.1:4173",
+    launchOptions: process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {},
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",

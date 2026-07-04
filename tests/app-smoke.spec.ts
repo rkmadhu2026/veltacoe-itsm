@@ -117,7 +117,8 @@ test.describe("authed shell", () => {
   test("dashboard renders KPIs, sections, sidebar, and side cards", async ({ page }) => {
     await expect(page).toHaveURL(/\/dashboard$/);
     await expect(page.locator(".sn-kpi")).toHaveCount(6);
-    await expect(page.locator(".sn-side-card")).toHaveCount(5);
+    // 7 side cards since the on-call + status-pages modules landed.
+    await expect(page.locator(".sn-side-card")).toHaveCount(7);
     await expect(page.locator(".sn-activity-item").first()).toBeVisible();
     await expect(page.locator(".sn-form-section")).not.toHaveCount(0);
     await expect(page.getByText("LinkedEye-FinSpot", { exact: false }).first()).toBeVisible();
