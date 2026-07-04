@@ -693,3 +693,66 @@ export interface AuditEvent {
   tenant: string;
   detail: string;
 }
+
+// ---------- APM / traces ----------
+// RED-method service telemetry (rate, errors, duration) plus distributed
+// traces rendered as span waterfalls. Sourced from OpenTelemetry in the real
+// pipeline; modeled as typed fixtures here.
+
+export interface ApmEndpoint {
+  service: string;
+  /** e.g. "POST /v1/checkout" */
+  route: string;
+  rpm: number;
+  p50: string;
+  p95: string;
+  /** Error percentage 0–100. */
+  errPct: number;
+  /** Apdex score 0–1. */
+  apdex: number;
+}
+
+export type SpanKind = "server" | "client" | "db" | "queue" | "internal";
+
+export interface TraceSpan {
+  id: string;
+  parentId: string | null;
+  service: string;
+  name: string;
+  kind: SpanKind;
+  /** Offset from trace start, ms. */
+  startMs: number;
+  /** Span duration, ms. */
+  durMs: number;
+  error?: boolean;
+}
+
+export interface Trace {
+  id: string;
+  name: string;
+  /** Total duration ms. */
+  durMs: number;
+  status: "ok" | "error";
+  startedAt: string;
+  spans: TraceSpan[];
+}
+
+/** Directed service dependency edge (caller → callee). */
+export type ServiceDep = [string, string];
+
+// ---------- Logs ----------
+
+export type LogLevel = "error" | "warn" | "info" | "debug";
+
+export interface LogEntry {
+  id: string;
+  /** "HH:mm:ss.SSS" display timestamp. */
+  ts: string;
+  level: LogLevel;
+  service: string;
+  host: string;
+  tenant: string;
+  message: string;
+  /** Optional trace correlation id. */
+  traceId?: string;
+}

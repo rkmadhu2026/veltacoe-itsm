@@ -15,6 +15,9 @@ import { TopologyScreen } from "@/screens/infra/Topology";
 import { VirtualizationScreen } from "@/screens/infra/Virtualization";
 import { ExportersScreen } from "@/screens/infra/Exporters";
 import { RackScreen } from "@/screens/infra/Rack";
+import { ApmScreen } from "@/screens/observe/Apm";
+import { LogsScreen } from "@/screens/observe/Logs";
+import { EntityMapScreen } from "@/screens/observe/EntityMap";
 import { OnboardingScreen } from "@/screens/onboarding/Onboarding";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
@@ -73,10 +76,10 @@ export function AppRoutes() {
         <Route path="/flow" element={<Placeholder title="Flow Designer" />} />
         <Route path="/reports" element={<Placeholder title="Reports & analytics" />} />
 
-        <Route path="/apm" element={<Placeholder title="APM & traces" />} />
-        <Route path="/logs" element={<Placeholder title="Logs" />} />
+        <Route path="/apm" element={<ApmScreen />} />
+        <Route path="/logs" element={<LogsScreen />} />
         <Route path="/alerts" element={<AlertsScreen />} />
-        <Route path="/entity-map" element={<Placeholder title="Entity map" />} />
+        <Route path="/entity-map" element={<EntityMapScreen />} />
 
         <Route path="/infra" element={<NocOverviewScreen />} />
         <Route path="/infra/assets" element={<AssetInventoryScreen />} />
