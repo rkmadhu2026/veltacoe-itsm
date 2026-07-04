@@ -12,6 +12,9 @@ import { NocOverviewScreen } from "@/screens/infra/NocOverview";
 import { AssetInventoryScreen } from "@/screens/infra/AssetInventory";
 import { Node360Screen } from "@/screens/infra/Node360";
 import { TopologyScreen } from "@/screens/infra/Topology";
+import { VirtualizationScreen } from "@/screens/infra/Virtualization";
+import { ExportersScreen } from "@/screens/infra/Exporters";
+import { RackScreen } from "@/screens/infra/Rack";
 import { OnboardingScreen } from "@/screens/onboarding/Onboarding";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
@@ -78,9 +81,9 @@ export function AppRoutes() {
         <Route path="/infra" element={<NocOverviewScreen />} />
         <Route path="/infra/assets" element={<AssetInventoryScreen />} />
         <Route path="/infra/topology" element={<TopologyScreen />} />
-        <Route path="/infra/vms" element={<Placeholder title="Virtual machines" />} />
-        <Route path="/infra/rack" element={<Placeholder title="Datacenter rack" />} />
-        <Route path="/infra/exporters" element={<Placeholder title="Exporters" />} />
+        <Route path="/infra/vms" element={<VirtualizationScreen />} />
+        <Route path="/infra/rack" element={<RackScreen />} />
+        <Route path="/infra/exporters" element={<ExportersScreen />} />
         <Route path="/infra/device/:id" element={<Node360Screen />} />
 
         <Route path="/integrations" element={<Placeholder title="Integrations" />} />
