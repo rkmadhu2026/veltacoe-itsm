@@ -16,3 +16,4 @@ export * from "./alerts";
 export * from "./catalog";
 export * from "./observability";
 export * from "./trading-ops";
+export * from "./automation";

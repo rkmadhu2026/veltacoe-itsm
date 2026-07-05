@@ -857,3 +857,52 @@ export interface BodEodCell {
   day: string;
   state: CheckState;
 }
+
+// ---------- Automation (StackStorm control plane) ----------
+// LinkedEye is the control plane; StackStorm only executes. Read-only
+// recommendations first; production runs demand approval, an incident
+// reference, a rollback plan, and an immutable audit record.
+
+export type AutomationTier = "safe" | "guarded" | "forbidden";
+
+export type ExecutionState =
+  | "PROPOSED"
+  | "AWAITING_APPROVAL"
+  | "APPROVED"
+  | "RUNNING"
+  | "SUCCEEDED"
+  | "FAILED"
+  | "ROLLED_BACK"
+  | "REJECTED";
+
+export interface AutomationAction {
+  id: string;
+  name: string;
+  /** StackStorm pack.action reference. */
+  st2Action: string;
+  tier: AutomationTier;
+  description: string;
+  /** Human-readable rollback plan; required for guarded actions. */
+  rollbackPlan: string | null;
+  runbook: string | null;
+  /** Number of successful runs, all time. */
+  runs: number;
+}
+
+export interface AutomationExecution {
+  id: string;
+  actionId: string;
+  target: string;
+  tenant: string;
+  /** Linked incident id — required before anything executes. */
+  incidentRef: string;
+  requestedBy: string;
+  reason: string;
+  state: ExecutionState;
+  /** Approver user id once decided. */
+  decidedBy?: string;
+  decisionNote?: string;
+  requestedAt: string;
+  finishedAt?: string;
+  output?: string;
+}

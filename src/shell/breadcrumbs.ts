@@ -92,6 +92,7 @@ export function crumbsFor(pathname: string, tenant: Tenant): Crumb[] {
     "/runbooks": "Runbooks",
     "/cmdb": "CMDB",
     "/slas": "SLA definitions",
+    "/automation": "Automation control plane",
     "/flow": "Flow Designer",
     "/reports": "Reports & analytics",
     "/apm": "APM & traces",

@@ -155,6 +155,14 @@ export const NAV: readonly NavSection[] = [
   {
     section: "Build",
     items: [
+      {
+        id: "automation",
+        label: "Automation",
+        icon: "fa-robot",
+        to: "/automation",
+        matchPrefix: "/automation",
+        badge: { n: 2, kind: "warning" },
+      },
       { id: "flow", label: "Flow Designer", icon: "fa-diagram-project", to: "/flow" },
       { id: "reports", label: "Reports", icon: "fa-chart-column", to: "/reports" },
       {
