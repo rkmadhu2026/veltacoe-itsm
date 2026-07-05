@@ -906,3 +906,61 @@ export interface AutomationExecution {
   finishedAt?: string;
   output?: string;
 }
+
+// ---------------------------------------------------------------------------
+// Reports & analytics
+// ---------------------------------------------------------------------------
+
+export type ReportFormat = "pdf" | "csv" | "html";
+export type ReportCadence = "daily" | "weekly" | "monthly" | "quarterly";
+export type ReportRunState = "ok" | "failed" | "running";
+
+export interface ReportDefinition {
+  id: string;
+  name: string;
+  description: string;
+  /** Who the report is written for, e.g. "NOC leads", "CTO office". */
+  audience: string;
+  cadence: ReportCadence;
+  /** Human-readable schedule, e.g. "Mon 07:00 IST". */
+  schedule: string;
+  format: ReportFormat;
+  owner: string;
+  recipients: number;
+  lastRun: string;
+  lastRunState: ReportRunState;
+}
+
+export interface SlaAttainmentRow {
+  service: string;
+  tenant: string;
+  targetPct: number;
+  attainedPct: number;
+  /** Remaining error budget for the current window, 0–100. */
+  errorBudgetLeftPct: number;
+  breaches: number;
+}
+
+export interface MonthlyOpsMetric {
+  month: string;
+  incidents: number;
+  mttrMin: number;
+  mttaMin: number;
+  changeFailPct: number;
+}
+
+export interface TenantUsageRow {
+  tenant: string;
+  devices: number;
+  metricsPerSec: number;
+  logGbPerDay: number;
+  alertsPerDay: number;
+  automationRuns: number;
+  monthlyCostUsd: number;
+}
+
+export interface AlertFunnelStage {
+  stage: string;
+  count: number;
+  note: string;
+}

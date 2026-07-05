@@ -21,6 +21,7 @@ import { EntityMapScreen } from "@/screens/observe/EntityMap";
 import { OnboardingScreen } from "@/screens/onboarding/Onboarding";
 import { TradingOpsScreen } from "@/screens/trading-ops/TradingOps";
 import { AutomationScreen } from "@/screens/automation/Automation";
+import { ReportsScreen } from "@/screens/reports/Reports";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -77,7 +78,7 @@ export function AppRoutes() {
         <Route path="/runbooks" element={<Placeholder title="Runbooks" />} />
         <Route path="/automation" element={<AutomationScreen />} />
         <Route path="/flow" element={<Placeholder title="Flow Designer" />} />
-        <Route path="/reports" element={<Placeholder title="Reports & analytics" />} />
+        <Route path="/reports" element={<ReportsScreen />} />
 
         <Route path="/apm" element={<ApmScreen />} />
         <Route path="/logs" element={<LogsScreen />} />
