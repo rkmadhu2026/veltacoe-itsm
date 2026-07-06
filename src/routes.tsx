@@ -26,6 +26,8 @@ import { ServicesScreen } from "@/screens/services/Services";
 import { CmdbScreen } from "@/screens/services/Cmdb";
 import { SlasScreen } from "@/screens/services/Slas";
 import { RunbooksScreen } from "@/screens/services/Runbooks";
+import { ProblemsScreen } from "@/screens/itsm/Problems";
+import { ChangesScreen } from "@/screens/itsm/Changes";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -63,11 +65,11 @@ export function AppRoutes() {
         <Route path="/on-call" element={<OnCallScreen />} />
         <Route path="/status-pages" element={<StatusPagesScreen />} />
 
-        <Route path="/problems" element={<Placeholder title="Problem management" />} />
+        <Route path="/problems" element={<ProblemsScreen />} />
         <Route path="/problems/new" element={<Placeholder title="New problem" />} />
         <Route path="/problems/:id" element={<Placeholder />} />
 
-        <Route path="/changes" element={<Placeholder title="Change management" />} />
+        <Route path="/changes" element={<ChangesScreen />} />
         <Route path="/changes/:id" element={<Placeholder />} />
 
         <Route path="/catalog" element={<Placeholder title="Service catalog" />} />
