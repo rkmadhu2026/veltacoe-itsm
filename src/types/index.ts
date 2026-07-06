@@ -964,3 +964,22 @@ export interface AlertFunnelStage {
   count: number;
   note: string;
 }
+
+// ---------------------------------------------------------------------------
+// Runbook library
+// ---------------------------------------------------------------------------
+
+export interface Runbook {
+  id: string;
+  title: string;
+  category: string;
+  service: string;
+  steps: number;
+  owner: string;
+  lastReviewed: string;
+  /** Reviewed within policy (90 days) and exercised in a game day. */
+  verified: boolean;
+  executions30d: number;
+  /** Linked StackStorm action when the runbook is automatable. */
+  automationActionId: string | null;
+}

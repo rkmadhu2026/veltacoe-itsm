@@ -22,6 +22,10 @@ import { OnboardingScreen } from "@/screens/onboarding/Onboarding";
 import { TradingOpsScreen } from "@/screens/trading-ops/TradingOps";
 import { AutomationScreen } from "@/screens/automation/Automation";
 import { ReportsScreen } from "@/screens/reports/Reports";
+import { ServicesScreen } from "@/screens/services/Services";
+import { CmdbScreen } from "@/screens/services/Cmdb";
+import { SlasScreen } from "@/screens/services/Slas";
+import { RunbooksScreen } from "@/screens/services/Runbooks";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -72,10 +76,10 @@ export function AppRoutes() {
         <Route path="/knowledge" element={<Placeholder title="Knowledge base" />} />
         <Route path="/knowledge/:id" element={<Placeholder />} />
 
-        <Route path="/services" element={<Placeholder title="Services" />} />
-        <Route path="/cmdb" element={<Placeholder title="CMDB" />} />
-        <Route path="/slas" element={<Placeholder title="SLA definitions" />} />
-        <Route path="/runbooks" element={<Placeholder title="Runbooks" />} />
+        <Route path="/services" element={<ServicesScreen />} />
+        <Route path="/cmdb" element={<CmdbScreen />} />
+        <Route path="/slas" element={<SlasScreen />} />
+        <Route path="/runbooks" element={<RunbooksScreen />} />
         <Route path="/automation" element={<AutomationScreen />} />
         <Route path="/flow" element={<Placeholder title="Flow Designer" />} />
         <Route path="/reports" element={<ReportsScreen />} />
