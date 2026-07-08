@@ -28,6 +28,8 @@ import { SlasScreen } from "@/screens/services/Slas";
 import { RunbooksScreen } from "@/screens/services/Runbooks";
 import { ProblemsScreen } from "@/screens/itsm/Problems";
 import { ChangesScreen } from "@/screens/itsm/Changes";
+import { KnowledgeScreen } from "@/screens/itsm/Knowledge";
+import { CatalogScreen } from "@/screens/itsm/Catalog";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -72,10 +74,10 @@ export function AppRoutes() {
         <Route path="/changes" element={<ChangesScreen />} />
         <Route path="/changes/:id" element={<Placeholder />} />
 
-        <Route path="/catalog" element={<Placeholder title="Service catalog" />} />
+        <Route path="/catalog" element={<CatalogScreen />} />
         <Route path="/catalog/request" element={<Placeholder title="Catalog request" />} />
 
-        <Route path="/knowledge" element={<Placeholder title="Knowledge base" />} />
+        <Route path="/knowledge" element={<KnowledgeScreen />} />
         <Route path="/knowledge/:id" element={<Placeholder />} />
 
         <Route path="/services" element={<ServicesScreen />} />
