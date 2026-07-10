@@ -30,6 +30,7 @@ import { ProblemsScreen } from "@/screens/itsm/Problems";
 import { ChangesScreen } from "@/screens/itsm/Changes";
 import { KnowledgeScreen } from "@/screens/itsm/Knowledge";
 import { CatalogScreen } from "@/screens/itsm/Catalog";
+import { ProfileScreen } from "@/screens/profile/Profile";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -108,6 +109,7 @@ export function AppRoutes() {
         <Route path="/admin/billing" element={<Placeholder title="Billing & plans" />} />
         <Route path="/admin/usage" element={<Placeholder title="Usage & quotas" />} />
 
+        <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/users" element={<Placeholder title="People & roles" />} />
         <Route path="/settings" element={<Placeholder title="Settings" />} />
         <Route path="/cross-tenant" element={<Placeholder title="Cross-tenant" />} />

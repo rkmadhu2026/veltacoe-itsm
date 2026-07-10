@@ -77,14 +77,19 @@ export function Header({ onOpenCommand }: HeaderProps) {
           <i className="fa-solid fa-circle-question" />
         </button>
         <div className="hdr-divider" />
-        <div className="hdr-user">
+        <Link
+          to="/profile"
+          className="hdr-user"
+          title="My profile"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
           <Avatar name="Priya Raghunathan" color="amber" />
           <div>
             <b>Priya</b>
             <span>IC · on-call</span>
           </div>
           <i className="fa-solid fa-chevron-down" />
-        </div>
+        </Link>
       </div>
     </header>
   );

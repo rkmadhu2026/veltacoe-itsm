@@ -100,6 +100,7 @@ export function crumbsFor(pathname: string, tenant: Tenant): Crumb[] {
     "/alerts": "Alerts",
     "/entity-map": "Entity map",
     "/users": "People & roles",
+    "/profile": "My profile",
     "/settings": "Settings",
   };
   if (simple[pathname]) return [...base, { label: simple[pathname] }];
