@@ -31,6 +31,7 @@ import { ChangesScreen } from "@/screens/itsm/Changes";
 import { KnowledgeScreen } from "@/screens/itsm/Knowledge";
 import { CatalogScreen } from "@/screens/itsm/Catalog";
 import { ProfileScreen } from "@/screens/profile/Profile";
+import { IntegrationsScreen } from "@/screens/integrations/Integrations";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -102,7 +103,7 @@ export function AppRoutes() {
         <Route path="/infra/exporters" element={<ExportersScreen />} />
         <Route path="/infra/device/:id" element={<Node360Screen />} />
 
-        <Route path="/integrations" element={<Placeholder title="Integrations" />} />
+        <Route path="/integrations" element={<IntegrationsScreen />} />
         <Route path="/integrations/:name" element={<Placeholder />} />
 
         <Route path="/admin/tenants" element={<Placeholder title="Tenants" />} />
