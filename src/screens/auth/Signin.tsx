@@ -67,6 +67,25 @@ export function SigninScreen() {
             One command center for service health, on-call response, infrastructure, runbooks, and
             AI-assisted root cause analysis.
           </p>
+          <div className="login-pillars">
+            {(
+              [
+                ["fa-server", "Monitoring"],
+                ["fa-arrow-trend-up", "BOD · EOD status tracking"],
+                ["fa-chart-column", "Data analytics"],
+                ["fa-robot", "Automation"],
+              ] as const
+            ).map(([icon, label]) => (
+              <span key={label} className="login-pillar">
+                <i className={`fa-solid ${icon}`} /> {label}
+              </span>
+            ))}
+          </div>
+          <style>{`
+            .login-pillars{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+            .login-pillar{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;padding:7px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.92);background:rgba(255,255,255,.08)}
+            .login-pillar i{font-size:10px;opacity:.85}
+          `}</style>
         </div>
       </section>
       <main className="auth-main">
