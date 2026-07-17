@@ -32,6 +32,9 @@ import { KnowledgeScreen } from "@/screens/itsm/Knowledge";
 import { CatalogScreen } from "@/screens/itsm/Catalog";
 import { ProfileScreen } from "@/screens/profile/Profile";
 import { IntegrationsScreen } from "@/screens/integrations/Integrations";
+import { AdminTenantsScreen } from "@/screens/admin/Tenants";
+import { AdminBillingScreen } from "@/screens/admin/Billing";
+import { AdminUsageScreen } from "@/screens/admin/Usage";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -106,9 +109,9 @@ export function AppRoutes() {
         <Route path="/integrations" element={<IntegrationsScreen />} />
         <Route path="/integrations/:name" element={<Placeholder />} />
 
-        <Route path="/admin/tenants" element={<Placeholder title="Tenants" />} />
-        <Route path="/admin/billing" element={<Placeholder title="Billing & plans" />} />
-        <Route path="/admin/usage" element={<Placeholder title="Usage & quotas" />} />
+        <Route path="/admin/tenants" element={<AdminTenantsScreen />} />
+        <Route path="/admin/billing" element={<AdminBillingScreen />} />
+        <Route path="/admin/usage" element={<AdminUsageScreen />} />
 
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/users" element={<Placeholder title="People & roles" />} />
