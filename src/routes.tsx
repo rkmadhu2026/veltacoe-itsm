@@ -35,6 +35,8 @@ import { IntegrationsScreen } from "@/screens/integrations/Integrations";
 import { AdminTenantsScreen } from "@/screens/admin/Tenants";
 import { AdminBillingScreen } from "@/screens/admin/Billing";
 import { AdminUsageScreen } from "@/screens/admin/Usage";
+import { PeopleScreen } from "@/screens/admin/People";
+import { SettingsScreen } from "@/screens/admin/Settings";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -114,8 +116,8 @@ export function AppRoutes() {
         <Route path="/admin/usage" element={<AdminUsageScreen />} />
 
         <Route path="/profile" element={<ProfileScreen />} />
-        <Route path="/users" element={<Placeholder title="People & roles" />} />
-        <Route path="/settings" element={<Placeholder title="Settings" />} />
+        <Route path="/users" element={<PeopleScreen />} />
+        <Route path="/settings" element={<SettingsScreen />} />
         <Route path="/cross-tenant" element={<Placeholder title="Cross-tenant" />} />
         <Route path="/trading-ops" element={<TradingOpsScreen />} />
         <Route path="/onboarding" element={<OnboardingScreen />} />
