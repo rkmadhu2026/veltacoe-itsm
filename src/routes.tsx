@@ -37,6 +37,8 @@ import { AdminBillingScreen } from "@/screens/admin/Billing";
 import { AdminUsageScreen } from "@/screens/admin/Usage";
 import { PeopleScreen } from "@/screens/admin/People";
 import { SettingsScreen } from "@/screens/admin/Settings";
+import { CrossTenantScreen } from "@/screens/admin/CrossTenant";
+import { FlowDesignerScreen } from "@/screens/flow/FlowDesigner";
 import { Placeholder } from "@/screens/Placeholder";
 import { useAuth } from "@/lib/useAuth";
 
@@ -92,7 +94,7 @@ export function AppRoutes() {
         <Route path="/slas" element={<SlasScreen />} />
         <Route path="/runbooks" element={<RunbooksScreen />} />
         <Route path="/automation" element={<AutomationScreen />} />
-        <Route path="/flow" element={<Placeholder title="Flow Designer" />} />
+        <Route path="/flow" element={<FlowDesignerScreen />} />
         <Route path="/reports" element={<ReportsScreen />} />
 
         <Route path="/apm" element={<ApmScreen />} />
@@ -118,7 +120,7 @@ export function AppRoutes() {
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/users" element={<PeopleScreen />} />
         <Route path="/settings" element={<SettingsScreen />} />
-        <Route path="/cross-tenant" element={<Placeholder title="Cross-tenant" />} />
+        <Route path="/cross-tenant" element={<CrossTenantScreen />} />
         <Route path="/trading-ops" element={<TradingOpsScreen />} />
         <Route path="/onboarding" element={<OnboardingScreen />} />
       </Route>
