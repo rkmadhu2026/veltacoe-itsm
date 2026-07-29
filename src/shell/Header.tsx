@@ -52,7 +52,11 @@ export function Header({ onOpenCommand }: HeaderProps) {
           <button
             type="button"
             className="hdr-incident-pill"
-            onClick={() => navigate(`/incidents/${INCIDENTS.find((i) => i.sev === 1 && i.status === "active")?.id ?? ""}`)}
+            onClick={() =>
+              navigate(
+                `/incidents/${INCIDENTS.find((i) => i.sev === 1 && i.status === "active")?.id ?? ""}`,
+              )
+            }
           >
             <span className="pulse-dot" />
             <span>{activeSev1} active Sev 1</span>
@@ -73,14 +77,19 @@ export function Header({ onOpenCommand }: HeaderProps) {
           <i className="fa-solid fa-circle-question" />
         </button>
         <div className="hdr-divider" />
-        <div className="hdr-user">
+        <Link
+          to="/profile"
+          className="hdr-user"
+          title="My profile"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
           <Avatar name="Priya Raghunathan" color="amber" />
           <div>
             <b>Priya</b>
             <span>IC · on-call</span>
           </div>
           <i className="fa-solid fa-chevron-down" />
-        </div>
+        </Link>
       </div>
     </header>
   );

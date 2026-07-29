@@ -58,11 +58,16 @@ export function crumbsFor(pathname: string, tenant: Tenant): Crumb[] {
       { label: id ?? "Device" },
     ];
   }
-  if (pathname === "/infra/assets") return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Asset inventory" }];
-  if (pathname === "/infra/topology") return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Topology" }];
-  if (pathname === "/infra/vms") return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Virtual machines" }];
-  if (pathname === "/infra/rack") return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Datacenter rack" }];
-  if (pathname === "/infra/exporters") return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Exporters" }];
+  if (pathname === "/infra/assets")
+    return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Asset inventory" }];
+  if (pathname === "/infra/topology")
+    return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Topology" }];
+  if (pathname === "/infra/vms")
+    return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Virtual machines" }];
+  if (pathname === "/infra/rack")
+    return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Datacenter rack" }];
+  if (pathname === "/infra/exporters")
+    return [...base, { label: "Infrastructure", to: "/infra" }, { label: "Exporters" }];
   if (pathname === "/infra") return [...base, { label: "Infrastructure" }];
 
   if (pathname.startsWith("/admin/")) {
@@ -81,18 +86,21 @@ export function crumbsFor(pathname: string, tenant: Tenant): Crumb[] {
   const simple: Record<string, string> = {
     "/dashboard": "Operations Dashboard",
     "/on-call": "On-call schedules",
+    "/trading-ops": "Trading operations",
     "/status-pages": "Status pages",
     "/services": "Services",
     "/runbooks": "Runbooks",
     "/cmdb": "CMDB",
     "/slas": "SLA definitions",
+    "/automation": "Automation control plane",
     "/flow": "Flow Designer",
     "/reports": "Reports & analytics",
     "/apm": "APM & traces",
     "/logs": "Logs",
-    "/alerts": "Alert conditions",
+    "/alerts": "Alerts",
     "/entity-map": "Entity map",
     "/users": "People & roles",
+    "/profile": "My profile",
     "/settings": "Settings",
   };
   if (simple[pathname]) return [...base, { label: simple[pathname] }];

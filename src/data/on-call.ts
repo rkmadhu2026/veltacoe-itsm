@@ -1,9 +1,4 @@
-import type {
-  EscalationPolicy,
-  OnCallOverride,
-  Schedule,
-  Shift,
-} from "@/types";
+import type { EscalationPolicy, OnCallOverride, Schedule, Shift } from "@/types";
 
 // Weekday helpers — keep index-based math out of the screen file.
 export const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
@@ -60,22 +55,86 @@ export const SCHEDULES: readonly Schedule[] = [
 // Times in 24h. Two layers per schedule modelling business-hours + after-hours.
 export const SHIFTS: readonly Shift[] = [
   // SRE primary — Priya weekdays, Devon weekend
-  { scheduleId: "sched-sre-primary",   layer: 1, userId: "u1", startDay: 0, endDay: 4, startTime: "09:00", endTime: "21:00" },
-  { scheduleId: "sched-sre-primary",   layer: 2, userId: "u5", startDay: 0, endDay: 4, startTime: "21:00", endTime: "09:00" },
-  { scheduleId: "sched-sre-primary",   layer: 1, userId: "u5", startDay: 5, endDay: 6, startTime: "00:00", endTime: "23:59" },
+  {
+    scheduleId: "sched-sre-primary",
+    layer: 1,
+    userId: "u1",
+    startDay: 0,
+    endDay: 4,
+    startTime: "09:00",
+    endTime: "21:00",
+  },
+  {
+    scheduleId: "sched-sre-primary",
+    layer: 2,
+    userId: "u5",
+    startDay: 0,
+    endDay: 4,
+    startTime: "21:00",
+    endTime: "09:00",
+  },
+  {
+    scheduleId: "sched-sre-primary",
+    layer: 1,
+    userId: "u5",
+    startDay: 5,
+    endDay: 6,
+    startTime: "00:00",
+    endTime: "23:59",
+  },
 
   // SRE secondary — Marcus weekdays
-  { scheduleId: "sched-sre-secondary", layer: 1, userId: "u2", startDay: 0, endDay: 4, startTime: "00:00", endTime: "23:59" },
-  { scheduleId: "sched-sre-secondary", layer: 1, userId: "u8", startDay: 5, endDay: 6, startTime: "00:00", endTime: "23:59" },
+  {
+    scheduleId: "sched-sre-secondary",
+    layer: 1,
+    userId: "u2",
+    startDay: 0,
+    endDay: 4,
+    startTime: "00:00",
+    endTime: "23:59",
+  },
+  {
+    scheduleId: "sched-sre-secondary",
+    layer: 1,
+    userId: "u8",
+    startDay: 5,
+    endDay: 6,
+    startTime: "00:00",
+    endTime: "23:59",
+  },
 
   // Database — Elena
-  { scheduleId: "sched-database",      layer: 1, userId: "u4", startDay: 0, endDay: 6, startTime: "00:00", endTime: "23:59" },
+  {
+    scheduleId: "sched-database",
+    layer: 1,
+    userId: "u4",
+    startDay: 0,
+    endDay: 6,
+    startTime: "00:00",
+    endTime: "23:59",
+  },
 
   // Network — Yuki
-  { scheduleId: "sched-network",       layer: 1, userId: "u3", startDay: 0, endDay: 6, startTime: "00:00", endTime: "23:59" },
+  {
+    scheduleId: "sched-network",
+    layer: 1,
+    userId: "u3",
+    startDay: 0,
+    endDay: 6,
+    startTime: "00:00",
+    endTime: "23:59",
+  },
 
   // Security — Jamal
-  { scheduleId: "sched-security",      layer: 1, userId: "u7", startDay: 0, endDay: 6, startTime: "00:00", endTime: "23:59" },
+  {
+    scheduleId: "sched-security",
+    layer: 1,
+    userId: "u7",
+    startDay: 0,
+    endDay: 6,
+    startTime: "00:00",
+    endTime: "23:59",
+  },
 ];
 
 export const ESCALATION_POLICIES: readonly EscalationPolicy[] = [
@@ -86,10 +145,30 @@ export const ESCALATION_POLICIES: readonly EscalationPolicy[] = [
     description: "Critical alerts on tier-1 services. Wakes everyone if it has to.",
     repeat: 2,
     steps: [
-      { step: 1, afterMinutes: 0,  target: { kind: "schedule", scheduleId: "sched-sre-primary" },   channels: ["push", "sms", "voice", "slack"] },
-      { step: 2, afterMinutes: 5,  target: { kind: "schedule", scheduleId: "sched-sre-secondary" }, channels: ["push", "sms", "voice"] },
-      { step: 3, afterMinutes: 10, target: { kind: "user", userId: "u5" },                          channels: ["voice", "sms"] },
-      { step: 4, afterMinutes: 15, target: { kind: "team", team: "Platform" },                      channels: ["slack", "email"] },
+      {
+        step: 1,
+        afterMinutes: 0,
+        target: { kind: "schedule", scheduleId: "sched-sre-primary" },
+        channels: ["push", "sms", "voice", "slack"],
+      },
+      {
+        step: 2,
+        afterMinutes: 5,
+        target: { kind: "schedule", scheduleId: "sched-sre-secondary" },
+        channels: ["push", "sms", "voice"],
+      },
+      {
+        step: 3,
+        afterMinutes: 10,
+        target: { kind: "user", userId: "u5" },
+        channels: ["voice", "sms"],
+      },
+      {
+        step: 4,
+        afterMinutes: 15,
+        target: { kind: "team", team: "Platform" },
+        channels: ["slack", "email"],
+      },
     ],
   },
   {
@@ -99,9 +178,24 @@ export const ESCALATION_POLICIES: readonly EscalationPolicy[] = [
     description: "Oracle / Postgres / warehouse outages.",
     repeat: 1,
     steps: [
-      { step: 1, afterMinutes: 0,  target: { kind: "schedule", scheduleId: "sched-database" },     channels: ["push", "sms", "slack"] },
-      { step: 2, afterMinutes: 8,  target: { kind: "schedule", scheduleId: "sched-sre-primary" },  channels: ["push", "slack"] },
-      { step: 3, afterMinutes: 15, target: { kind: "user", userId: "u5" },                         channels: ["sms", "voice"] },
+      {
+        step: 1,
+        afterMinutes: 0,
+        target: { kind: "schedule", scheduleId: "sched-database" },
+        channels: ["push", "sms", "slack"],
+      },
+      {
+        step: 2,
+        afterMinutes: 8,
+        target: { kind: "schedule", scheduleId: "sched-sre-primary" },
+        channels: ["push", "slack"],
+      },
+      {
+        step: 3,
+        afterMinutes: 15,
+        target: { kind: "user", userId: "u5" },
+        channels: ["sms", "voice"],
+      },
     ],
   },
   {
@@ -111,8 +205,18 @@ export const ESCALATION_POLICIES: readonly EscalationPolicy[] = [
     description: "Firewall / switch / BGP failures.",
     repeat: 1,
     steps: [
-      { step: 1, afterMinutes: 0,  target: { kind: "schedule", scheduleId: "sched-network" },      channels: ["push", "sms"] },
-      { step: 2, afterMinutes: 10, target: { kind: "schedule", scheduleId: "sched-sre-primary" },  channels: ["slack", "push"] },
+      {
+        step: 1,
+        afterMinutes: 0,
+        target: { kind: "schedule", scheduleId: "sched-network" },
+        channels: ["push", "sms"],
+      },
+      {
+        step: 2,
+        afterMinutes: 10,
+        target: { kind: "schedule", scheduleId: "sched-sre-primary" },
+        channels: ["slack", "push"],
+      },
     ],
   },
   {
@@ -122,8 +226,18 @@ export const ESCALATION_POLICIES: readonly EscalationPolicy[] = [
     description: "EDR / IAM / cert / audit signals.",
     repeat: 0,
     steps: [
-      { step: 1, afterMinutes: 0, target: { kind: "schedule", scheduleId: "sched-security" }, channels: ["push", "sms", "voice"] },
-      { step: 2, afterMinutes: 5, target: { kind: "team", team: "Security" },                 channels: ["slack", "email"] },
+      {
+        step: 1,
+        afterMinutes: 0,
+        target: { kind: "schedule", scheduleId: "sched-security" },
+        channels: ["push", "sms", "voice"],
+      },
+      {
+        step: 2,
+        afterMinutes: 5,
+        target: { kind: "team", team: "Security" },
+        channels: ["slack", "email"],
+      },
     ],
   },
 ];

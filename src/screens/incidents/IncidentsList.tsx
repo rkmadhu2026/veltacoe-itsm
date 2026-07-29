@@ -35,7 +35,8 @@ export function IncidentsListScreen() {
       total: INCIDENTS.length,
       sev1: INCIDENTS.filter((i) => i.sev === 1 && i.status === "active").length,
       breaching: INCIDENTS.filter((i) => i.sla < 0.4 && i.status !== "resolved").length,
-      atRisk: INCIDENTS.filter((i) => i.sla >= 0.4 && i.sla < 0.7 && i.status !== "resolved").length,
+      atRisk: INCIDENTS.filter((i) => i.sla >= 0.4 && i.sla < 0.7 && i.status !== "resolved")
+        .length,
       unassigned: INCIDENTS.filter((i) => !i.assignee && i.status !== "resolved").length,
     };
   }, []);
@@ -43,7 +44,9 @@ export function IncidentsListScreen() {
   return (
     <div className="page page-fade sn-dash">
       <div className="sn-breadcrumb">
-        <Link to="/dashboard" className="sn-link">Home</Link>
+        <Link to="/dashboard" className="sn-link">
+          Home
+        </Link>
         <span className="sn-bc-sep">›</span>
         <span>Incidents</span>
       </div>
@@ -52,10 +55,10 @@ export function IncidentsListScreen() {
         <div className="sn-form-title-row">
           <span className="sn-rec-number">INC-LIST</span>
           {counts.sev1 > 0 && <Pill kind="critical">{counts.sev1} active Sev 1</Pill>}
-          {counts.breaching > 0 && (
-            <Pill kind="warning">{counts.breaching} SLA breaching</Pill>
-          )}
-          <Pill kind="neutral" noDot>{counts.total} total</Pill>
+          {counts.breaching > 0 && <Pill kind="warning">{counts.breaching} SLA breaching</Pill>}
+          <Pill kind="neutral" noDot>
+            {counts.total} total
+          </Pill>
         </div>
         <div className="sn-form-title-meta">
           <h1>Incidents</h1>
@@ -123,7 +126,12 @@ export function IncidentsListScreen() {
             onChange={(e) => setQ(e.target.value)}
           />
           {q && (
-            <button type="button" className="inc-toolbar-clear" onClick={() => setQ("")} aria-label="Clear">
+            <button
+              type="button"
+              className="inc-toolbar-clear"
+              onClick={() => setQ("")}
+              aria-label="Clear"
+            >
               <i className="fa-solid fa-xmark" />
             </button>
           )}
@@ -232,7 +240,10 @@ export function IncidentsListScreen() {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={9} style={{ padding: 32, textAlign: "center", color: "var(--fg-subtle)" }}>
+                  <td
+                    colSpan={9}
+                    style={{ padding: 32, textAlign: "center", color: "var(--fg-subtle)" }}
+                  >
                     No incidents match the current filters.
                   </td>
                 </tr>

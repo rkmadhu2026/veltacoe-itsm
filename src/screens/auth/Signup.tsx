@@ -26,11 +26,21 @@ export function SignupScreen() {
           </h2>
           <p>Connect production alert streams, logs, traces, and network telemetry.</p>
           <ul className="auth-checks">
-            <li><i className="fa-solid fa-check" /> Full Business plan features</li>
-            <li><i className="fa-solid fa-check" /> AI correlation + RCA</li>
-            <li><i className="fa-solid fa-check" /> 45+ integrations</li>
-            <li><i className="fa-solid fa-check" /> Unlimited workspaces</li>
-            <li><i className="fa-solid fa-check" /> Migration help included</li>
+            <li>
+              <i className="fa-solid fa-check" /> Full Business plan features
+            </li>
+            <li>
+              <i className="fa-solid fa-check" /> AI correlation + RCA
+            </li>
+            <li>
+              <i className="fa-solid fa-check" /> 45+ integrations
+            </li>
+            <li>
+              <i className="fa-solid fa-check" /> Unlimited workspaces
+            </li>
+            <li>
+              <i className="fa-solid fa-check" /> Migration help included
+            </li>
           </ul>
           <div className="auth-trust">
             <div className="lp-avatar amber">P</div>
@@ -43,11 +53,17 @@ export function SignupScreen() {
       <main className="auth-main">
         <div className="auth-card">
           <div className="auth-steps">
-            <div className={`auth-step${step >= 1 ? " on" : ""}`}><span>1</span> Account</div>
+            <div className={`auth-step${step >= 1 ? " on" : ""}`}>
+              <span>1</span> Account
+            </div>
             <div className="auth-step-sep" />
-            <div className={`auth-step${step >= 2 ? " on" : ""}`}><span>2</span> Workspace</div>
+            <div className={`auth-step${step >= 2 ? " on" : ""}`}>
+              <span>2</span> Workspace
+            </div>
             <div className="auth-step-sep" />
-            <div className={`auth-step${step >= 3 ? " on" : ""}`}><span>3</span> Team</div>
+            <div className={`auth-step${step >= 3 ? " on" : ""}`}>
+              <span>3</span> Team
+            </div>
           </div>
 
           {step === 1 && (
@@ -67,7 +83,9 @@ export function SignupScreen() {
                   <i className="fa-brands fa-github" /> GitHub
                 </button>
               </div>
-              <div className="auth-or"><span>or with email</span></div>
+              <div className="auth-or">
+                <span>or with email</span>
+              </div>
               <div className="auth-form">
                 <div className="auth-row">
                   <Lbl l="Full name *">

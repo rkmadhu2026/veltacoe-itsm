@@ -11,12 +11,12 @@ import { STATUS_COMPONENTS, STATUS_PAGES } from "./status-pages";
 // our 5 tenants and 5 schedules don't share a foreign key — schedules are
 // owned by teams, tenants subscribe to those teams.
 const TENANT_SCHEDULES: Record<string, readonly string[]> = {
-  "core-observability":    ["sched-sre-primary", "sched-sre-secondary", "sched-database"],
-  "application-services":  ["sched-sre-primary", "sched-sre-secondary"],
-  "observability-center":  ["sched-sre-primary"],
-  "risk-ops":              ["sched-security"],
-  "platform-labs":         ["sched-sre-primary"],
-  "colo-network":          ["sched-network", "sched-sre-primary"],
+  "core-observability": ["sched-sre-primary", "sched-sre-secondary", "sched-database"],
+  "application-services": ["sched-sre-primary", "sched-sre-secondary"],
+  "observability-center": ["sched-sre-primary"],
+  "risk-ops": ["sched-security"],
+  "platform-labs": ["sched-sre-primary"],
+  "colo-network": ["sched-network", "sched-sre-primary"],
 };
 
 export interface IncidentOnCallEntry {
@@ -62,9 +62,7 @@ export interface IncidentStatusPageLink {
  * incident's impacted service, if one exists. Returns the matching page
  * + component so the UI can offer "publish to status page" inline.
  */
-export function statusPageLinkForIncident(
-  incident: Incident,
-): IncidentStatusPageLink | null {
+export function statusPageLinkForIncident(incident: Incident): IncidentStatusPageLink | null {
   const component = STATUS_COMPONENTS.find((c) => c.service === incident.service);
   if (!component) return null;
   const page = STATUS_PAGES.find((p) => p.groups.some((g) => g.id === component.groupId));

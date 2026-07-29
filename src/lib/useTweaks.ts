@@ -8,7 +8,9 @@ const STORAGE_KEY = "veltacore.tweaks.v1";
  * Persists to localStorage instead of the Claude artifact-host postMessage
  * protocol (which doesn't apply outside a hosted artifact iframe).
  */
-export function useTweaks<T extends Tweaks>(defaults: T): [T, <K extends keyof T>(key: K, val: T[K]) => void] {
+export function useTweaks<T extends Tweaks>(
+  defaults: T,
+): [T, <K extends keyof T>(key: K, val: T[K]) => void] {
   const [values, setValues] = useState<T>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);

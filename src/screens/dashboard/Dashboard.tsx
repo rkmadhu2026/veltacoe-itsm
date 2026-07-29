@@ -3,13 +3,17 @@ import type { ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sev, UserById } from "@/components";
 import {
+  AUTOMATION_EXECUTIONS,
   INCIDENTS,
+  OPS_TREND,
+  REPORT_DEFINITIONS,
   SCHEDULES,
   SERVICES,
   STATUS_INCIDENTS,
   STATUS_PAGES,
   TENANTS,
   TIMELINE_EVENTS,
+  TRADING_STEPS,
   rollUpStatus,
   whoIsOnCall,
 } from "@/data";
@@ -39,8 +43,7 @@ export function DashboardScreen() {
 
   // Status-page rollups across every page + active status incidents.
   const statusSummary = useMemo(
-    () =>
-      STATUS_PAGES.map((p) => ({ page: p, rollup: rollUpStatus(p.id) })),
+    () => STATUS_PAGES.map((p) => ({ page: p, rollup: rollUpStatus(p.id) })),
     [],
   );
   const activeStatusIncidents = STATUS_INCIDENTS.filter((i) => i.stage !== "resolved");
@@ -114,11 +117,13 @@ export function DashboardScreen() {
             <div className="ops-signal-foot">6 alerts grouped into 2 Sev-1 patterns</div>
           </div>
           <div className="ops-risk-stack">
-            {([
-              ["Node Exporter hosts", "412", "ok"],
-              ["Prometheus targets", "866", "ok"],
-              ["Grafana dashboards", "12", "ok"],
-            ] as const).map(([label, value, tone]) => (
+            {(
+              [
+                ["Node Exporter hosts", "412", "ok"],
+                ["Prometheus targets", "866", "ok"],
+                ["Grafana dashboards", "12", "ok"],
+              ] as const
+            ).map(([label, value, tone]) => (
               <div key={label} className={`ops-risk-row ${tone}`}>
                 <span>{label}</span>
                 <b>{value}</b>
@@ -130,9 +135,7 @@ export function DashboardScreen() {
 
       <div className="sn-form-header">
         <div className="sn-form-title-row">
-          <span className="sn-rec-number">
-            DASH-{String(tenant.name.length).padStart(4, "0")}
-          </span>
+          <span className="sn-rec-number">DASH-{String(tenant.name.length).padStart(4, "0")}</span>
           <span className="sn-pill prio-1">
             <i className="fa-solid fa-circle" /> 1 — Critical
           </span>
@@ -150,9 +153,15 @@ export function DashboardScreen() {
           </div>
         </div>
         <div className="sn-form-actions">
-          <button className="sn-btn"><i className="fa-solid fa-share-nodes" /> Share</button>
-          <button className="sn-btn"><i className="fa-solid fa-file-export" /> Export</button>
-          <button className="sn-btn"><i className="fa-solid fa-print" /> Print</button>
+          <button className="sn-btn">
+            <i className="fa-solid fa-share-nodes" /> Share
+          </button>
+          <button className="sn-btn">
+            <i className="fa-solid fa-file-export" /> Export
+          </button>
+          <button className="sn-btn">
+            <i className="fa-solid fa-print" /> Print
+          </button>
           <button
             type="button"
             className="sn-btn primary"
@@ -178,6 +187,77 @@ export function DashboardScreen() {
             <div className="sn-kpi-s">{k.sub}</div>
           </div>
         ))}
+      </div>
+
+      {/* LinkedEye product pillars — mirrors the platform's four core surfaces */}
+      <div className="pillar-strip">
+        {(() => {
+          const bod = TRADING_STEPS.filter((s) => s.workflow === "BOD");
+          const bodPassed = bod.filter((s) => s.state === "PASSED").length;
+          const pendingAuto = AUTOMATION_EXECUTIONS.filter(
+            (e) => e.state === "AWAITING_APPROVAL",
+          ).length;
+          const degraded = SERVICES.filter((s) => s.status !== "healthy").length;
+          const latest = OPS_TREND[OPS_TREND.length - 1];
+          const pillars = [
+            {
+              to: "/infra",
+              icon: "fa-server",
+              color: "#2563eb",
+              name: "Monitoring",
+              stat: "1,599 assets · 866 targets",
+              sub: `${degraded} services degraded`,
+            },
+            {
+              to: "/trading-ops",
+              icon: "fa-arrow-trend-up",
+              color: "#0891b2",
+              name: "BOD · EOD status tracking",
+              stat: `BOD ${bodPassed}/${bod.length} steps passed`,
+              sub: "EOD window opens 15:30 IST",
+            },
+            {
+              to: "/reports",
+              icon: "fa-chart-column",
+              color: "#8b5cf6",
+              name: "Data analytics",
+              stat: `MTTR ${latest.mttrMin}m · ${REPORT_DEFINITIONS.length} scheduled reports`,
+              sub: "reliability + spend rollups",
+            },
+            {
+              to: "/automation",
+              icon: "fa-robot",
+              color: "#f59e0b",
+              name: "Automation",
+              stat: `${pendingAuto} approvals pending`,
+              sub: "guarded actions need sign-off",
+            },
+          ];
+          return pillars.map((p) => (
+            <Link key={p.to} to={p.to} className="pillar-card">
+              <span className="pillar-icon" style={{ background: `${p.color}18`, color: p.color }}>
+                <i className={`fa-solid ${p.icon}`} />
+              </span>
+              <span className="pillar-body">
+                <span className="pillar-name">{p.name}</span>
+                <span className="pillar-stat">{p.stat}</span>
+                <span className="pillar-sub">{p.sub}</span>
+              </span>
+              <i className="fa-solid fa-chevron-right pillar-go" />
+            </Link>
+          ));
+        })()}
+        <style>{`
+          .pillar-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:18px}
+          .pillar-card{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--border,#e2e8f0);border-radius:11px;background:var(--bg,#fff);text-decoration:none;color:var(--fg)}
+          .pillar-card:hover{border-color:var(--accent)}
+          .pillar-icon{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;font-size:15px;flex-shrink:0}
+          .pillar-body{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+          .pillar-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--fg-subtle)}
+          .pillar-stat{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+          .pillar-sub{font-size:11px;color:var(--fg-subtle)}
+          .pillar-go{font-size:11px;color:var(--fg-subtle)}
+        `}</style>
       </div>
 
       <div className="sn-form-layout">
@@ -411,9 +491,7 @@ export function DashboardScreen() {
                     <td className="mono">{s.uptime}%</td>
                     <td className="mono">{s.p95}</td>
                     <td
-                      className={`mono ${
-                        s.err > 1 ? "tone-crit" : s.err > 0.1 ? "tone-warn" : ""
-                      }`}
+                      className={`mono ${s.err > 1 ? "tone-crit" : s.err > 0.1 ? "tone-warn" : ""}`}
                     >
                       {s.err}%
                     </td>
@@ -603,10 +681,7 @@ export function DashboardScreen() {
               <Field label="Assigned to" value={<UserById id="u1" />} />
               <Field label="Group" value="SRE-Tier-1" />
               <Field label="Caller" value={<a className="sn-link">Monitoring System</a>} />
-              <Field
-                label="Opened by"
-                value={<a className="sn-link">prometheus-alertmanager</a>}
-              />
+              <Field label="Opened by" value={<a className="sn-link">prometheus-alertmanager</a>} />
               <Field label="Updated" value="2 seconds ago" />
             </div>
           </div>
@@ -842,11 +917,7 @@ interface FormSectionProps {
 function FormSection({ id, title, badge, collapsed, onToggle, children }: FormSectionProps) {
   return (
     <div className="sn-form-section">
-      <button
-        type="button"
-        className="sn-section-header"
-        onClick={() => onToggle && onToggle(id)}
-      >
+      <button type="button" className="sn-section-header" onClick={() => onToggle && onToggle(id)}>
         <i className={`fa-solid fa-chevron-${collapsed ? "right" : "down"}`} />
         <span className="sn-section-title">{title}</span>
         {badge && <span className="sn-section-badge">{badge}</span>}
